@@ -3,8 +3,8 @@ let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
 window.onload = function() {
   renderProducts();
-  renderCart();
   updateStats();
+  renderCart();
 };
 
 function addProduct() {
@@ -53,7 +53,6 @@ function addToCart(index) {
   if(item) item.qty += qty;
   else cart.push({ ...product, qty });
   saveData();
-  renderCart();
 }
 
 function renderCart() {
@@ -78,4 +77,13 @@ function updateStats() {
 function saveData() {
   localStorage.setItem("products", JSON.stringify(products));
   localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function toggleCart() {
+  const overlay = document.getElementById("cartOverlay");
+  if(overlay.style.display === "flex") overlay.style.display = "none";
+  else {
+    overlay.style.display = "flex";
+    renderCart();
+  }
 }
