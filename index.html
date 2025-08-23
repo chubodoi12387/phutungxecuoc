@@ -40,5 +40,16 @@
   </div>
 
 <script src="script.js"></script>
+
+<script>
+  // Nhấn Enter thêm sản phẩm
+  document.getElementById("productName").addEventListener("keypress", function(e){
+    if(e.key === "Enter") addProduct();
+  });
+  document.getElementById("productPrice").addEventListener("keypress", function(e){
+    if(e.key === "Enter") addProduct();
+  });
+</script>
+
 </body>
 </html>
