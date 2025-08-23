@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phụ tùng xe cuốc</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Phụ tùng Xe Cuốc</h1>
+    </header>
+    <div class="container">
+        <div class="left-panel">
+            <h2>Admin</h2>
+            <button onclick="addProduct()">Thêm sản phẩm</button>
+            <h3>Thống kê</h3>
+            <div id="stats">
+                <p>Tổng sản phẩm: <span id="total">0</span></p>
+            </div>
+        </div>
+        <div class="right-panel">
+            <h2>Danh sách sản phẩm</h2>
+            <div id="product-list"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
