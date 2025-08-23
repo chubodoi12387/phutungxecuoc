@@ -95,11 +95,15 @@ function deleteCartItem(index) {
 }
 
 // Cập nhật thống kê
+// Cập nhật thống kê
 function updateStats() {
   document.getElementById("totalProducts").textContent = products.length;
-  const totalRev = products.reduce((sum,p)=>sum+p.price,0);
+
+  // Tính tổng doanh thu dựa trên giỏ hàng
+  const totalRev = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   document.getElementById("totalRevenue").textContent = totalRev;
 }
+
 
 // Lưu dữ liệu
 function saveData() {
@@ -116,3 +120,4 @@ function toggleCart() {
     renderCart();
   }
 }
+
