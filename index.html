@@ -34,6 +34,7 @@
     <div class="form" id="adminForm">
       <input type="text" id="productName" placeholder="Tên sản phẩm 📝">
       <input type="number" id="productPrice" placeholder="Giá sản phẩm 💰">
+      <textarea id="productDesc" placeholder="Mô tả sản phẩm 🧾"></textarea>
       <button onclick="addProduct()">➕ Thêm sản phẩm</button>
     </div>
 
@@ -57,7 +58,7 @@
     <div id="productList"></div>
   </div>
 
-  <!-- Giỏ hàng ẩn (popup/overlay) -->
+  <!-- Giỏ hàng ẩn -->
   <div id="cartOverlay" class="cart-overlay">
     <div class="cart-content">
       <span class="close-btn" onclick="toggleCart()">❌</span>
@@ -68,12 +69,12 @@
   </div>
 
   <!-- Popup chi tiết sản phẩm -->
-  <div id="productDetailPopup" class="product-detail-popup">
-    <div class="product-detail-content">
+  <div id="productDetailPopup" class="detail-popup">
+    <div class="detail-content">
       <span class="close-btn" onclick="closeProductDetail()">❌</span>
       <h2 id="detailName"></h2>
       <p><b>Giá:</b> <span id="detailPrice"></span> đ</p>
-      <p id="detailDesc"></p>
+      <p><b>Mô tả:</b> <span id="detailDesc"></span></p>
       <button onclick="closeProductDetail()">Đóng</button>
     </div>
   </div>
@@ -84,23 +85,10 @@
 <script src="script.js"></script>
 
 <script>
-  // Nhấn Enter để thêm sản phẩm
-  document.getElementById("productName").addEventListener("keypress", function(e){
-    if(e.key === "Enter") addProduct();
-  });
-  document.getElementById("productPrice").addEventListener("keypress", function(e){
-    if(e.key === "Enter") addProduct();
-  });
-
-  // Nhấn Enter khi đăng nhập admin
-  document.getElementById("adminPassword").addEventListener("keypress", function(e){
-    if(e.key === "Enter") adminLogin();
-  });
-
-  // Nhấn Enter trong ô tìm kiếm
-  document.getElementById("searchProduct").addEventListener("keypress", function(e){
-    if(e.key === "Enter") searchProductList();
-  });
+  document.getElementById("productName").addEventListener("keypress", e => { if(e.key === "Enter") addProduct(); });
+  document.getElementById("productPrice").addEventListener("keypress", e => { if(e.key === "Enter") addProduct(); });
+  document.getElementById("adminPassword").addEventListener("keypress", e => { if(e.key === "Enter") adminLogin(); });
+  document.getElementById("searchProduct").addEventListener("keypress", e => { if(e.key === "Enter") searchProductList(); });
 </script>
 
 </body>
