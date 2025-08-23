@@ -39,12 +39,24 @@ function renderProducts() {
       <div class="product-actions">
         <input type="number" id="qty${i}" value="1" min="1">
         <button class="add-cart" onclick="addToCart(${i})">🛒</button>
+        <button class="delete" onclick="deleteProduct(${i})">❌</button>
       </div>
     `;
     list.appendChild(div);
   });
 }
 
+// Xóa sản phẩm khỏi danh sách sản phẩm (Admin)
+function deleteProduct(index) {
+  const removed = products.splice(index,1)[0];
+  cart = cart.filter(item => item.name !== removed.name); // Xóa luôn trong giỏ hàng nếu muốn
+  saveData();
+  renderProducts();
+  renderCart();
+  updateStats();
+}
+
+// Thêm sản phẩm vào giỏ hàng
 function addToCart(index) {
   const qty = parseInt(document.getElementById("qty"+index).value);
   if(qty <= 0) return;
@@ -55,30 +67,42 @@ function addToCart(index) {
   saveData();
 }
 
+// Render giỏ hàng (khách)
 function renderCart() {
   const cartList = document.getElementById("cartItems");
   cartList.innerHTML = "";
   let total = 0;
-  cart.forEach(item=>{
+  cart.forEach((item, idx) => {
     total += item.price * item.qty;
     const li = document.createElement("li");
-    li.textContent = `${item.name} x ${item.qty} = ${item.price*item.qty} đ`;
+    li.innerHTML = `${item.name} x ${item.qty} = ${item.price*item.qty} đ 
+      <button class="cart-item-delete" onclick="deleteCartItem(${idx})">❌</button>`;
     cartList.appendChild(li);
   });
   document.getElementById("totalPrice").textContent = total;
 }
 
+// Xóa sản phẩm khỏi giỏ hàng (khách)
+function deleteCartItem(index) {
+  cart.splice(index,1);
+  saveData();
+  renderCart();
+}
+
+// Cập nhật thống kê
 function updateStats() {
   document.getElementById("totalProducts").textContent = products.length;
   const totalRev = products.reduce((sum,p)=>sum+p.price,0);
   document.getElementById("totalRevenue").textContent = totalRev;
 }
 
+// Lưu dữ liệu
 function saveData() {
   localStorage.setItem("products", JSON.stringify(products));
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
+// Hiện/ẩn giỏ hàng overlay
 function toggleCart() {
   const overlay = document.getElementById("cartOverlay");
   if(overlay.style.display === "flex") overlay.style.display = "none";
