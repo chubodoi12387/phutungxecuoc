@@ -1,7 +1,7 @@
 let products = JSON.parse(localStorage.getItem("products") || "[]");
 let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 let isAdmin = false;
-const ADMIN_PASSWORD = "123456"; // đổi mật khẩu admin
+const ADMIN_PASSWORD = "123456";
 
 window.onload = function() {
   renderProducts();
@@ -18,12 +18,8 @@ function showToast(message) {
 }
 
 // Admin login
-function showAdminLogin() {
-  document.getElementById("adminLoginPopup").style.display = "flex";
-}
-function closeAdminLogin() {
-  document.getElementById("adminLoginPopup").style.display = "none";
-}
+function showAdminLogin() { document.getElementById("adminLoginPopup").style.display = "flex"; }
+function closeAdminLogin() { document.getElementById("adminLoginPopup").style.display = "none"; }
 function adminLogin() {
   const pwd = document.getElementById("adminPassword").value;
   if(pwd === ADMIN_PASSWORD){
@@ -39,15 +35,12 @@ function adminLogin() {
 // Add product
 function addProduct() {
   if(!isAdmin) { alert("Bạn không có quyền admin!"); return; }
-
   const name = document.getElementById("productName").value.trim();
   const price = parseInt(document.getElementById("productPrice").value);
   if(!name || !price) { alert("Vui lòng nhập tên và giá!"); return; }
-
   products.push({ name, price });
   document.getElementById("productName").value = "";
   document.getElementById("productPrice").value = "";
-
   saveData();
   renderProducts();
   updateStats();
@@ -63,9 +56,7 @@ function renderProducts() {
     div.className = "product-card";
     let actionsHTML = `<input type="number" id="qty${i}" value="1" min="1">
                        <button class="add-cart" onclick="addToCart(${i})">🛒</button>`;
-    if(isAdmin){
-      actionsHTML += `<button class="delete" onclick="deleteProduct(${i})">❌</button>`;
-    }
+    if(isAdmin){ actionsHTML += `<button class="delete" onclick="deleteProduct(${i})">❌</button>`; }
     div.innerHTML = `
       <div class="product-info">
         <span><b>${p.name}</b></span>
@@ -147,9 +138,28 @@ function saveData() {
   localStorage.setItem("products", JSON.stringify(products));
   localStorage.setItem("cart", JSON.stringify(cart));
 }
-// Nhấn Enter ở popup admin login
-document.getElementById("adminPassword").addEventListener("keypress", function(e){
-  if(e.key === "Enter") adminLogin();
+
+// Tìm kiếm sản phẩm với gợi ý
+const searchInput = document.getElementById("searchProduct");
+const suggestions = document.getElementById("searchSuggestions");
+searchInput.addEventListener("input", function() {
+  const val = this.value.toLowerCase().trim();
+  suggestions.innerHTML = "";
+  if(val === "") { suggestions.style.display = "none"; return; }
+  const matched = products.filter(p => p.name.toLowerCase().includes(val));
+  if(matched.length > 0) {
+    matched.forEach(p => {
+      const li = document.createElement("li");
+      li.textContent = p.name;
+      li.addEventListener("click", function(){
+        searchInput.value = p.name;
+        suggestions.style.display = "none";
+      });
+      suggestions.appendChild(li);
+    });
+    suggestions.style.display = "block";
+  } else { suggestions.style.display = "none"; }
 });
-
-
+document.addEventListener("click", function(e){
+  if(!searchInput.contains(e.target)) { suggestions.style.display = "none"; }
+});
