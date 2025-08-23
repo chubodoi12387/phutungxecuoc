@@ -134,9 +134,12 @@ function toggleCart(){
 // Update stats
 function updateStats(){
   document.getElementById("totalProducts").textContent = products.length;
-  let totalRevenue = products.reduce((sum,p)=>sum+p.price,0);
+
+  // Tính tổng doanh thu dựa trên giỏ hàng
+  let totalRevenue = cart.reduce((sum, c) => sum + c.price * c.qty, 0);
   document.getElementById("totalRevenue").textContent = totalRevenue;
 }
+
 
 // Search products
 function searchProductList() {
@@ -148,3 +151,4 @@ function searchProductList() {
 const productPanel = document.getElementById("productList").parentElement;
 function showHome() { productPanel.style.display = "none"; }
 function showProductList() { productPanel.style.display = "block"; renderProducts(); }
+
