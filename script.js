@@ -1,16 +1,29 @@
-let products = JSON.parse(localStorage.getItem("products") || "[]");
-let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+// ==== Firebase setup ====
+const firebaseConfig = {
+  apiKey: "API_KEY",
+  authDomain: "PROJECT_ID.firebaseapp.com",
+  projectId: "PROJECT_ID",
+  storageBucket: "PROJECT_ID.appspot.com",
+  messagingSenderId: "SENDER_ID",
+  appId: "APP_ID"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ==== Biến toàn cục ====
 let isAdmin = false;
 const ADMIN_PASSWORD = "123456";
+const userId = "demoUser"; // user mặc định đồng bộ giỏ hàng
 
+// ==== Khởi tạo ====
 window.onload = function() {
   renderProducts();
-  updateStats();
   renderCart();
-  showHome(); 
+  updateStats();
+  showHome();
 };
 
-// Toast
+// ==== TOAST ====
 function showToast(message) {
   const toast = document.getElementById("toast");
   toast.textContent = message;
@@ -18,7 +31,7 @@ function showToast(message) {
   setTimeout(() => { toast.classList.remove("show"); }, 2000);
 }
 
-// Admin login
+// ==== ADMIN LOGIN ====
 function showAdminLogin() { document.getElementById("adminLoginPopup").style.display = "flex"; }
 function closeAdminLogin() { document.getElementById("adminLoginPopup").style.display = "none"; }
 function adminLogin() {
@@ -31,38 +44,41 @@ function adminLogin() {
   } else { alert("Mật khẩu sai!"); }
 }
 
-// Add product
-function addProduct() {
+// ==== THÊM SẢN PHẨM ====
+async function addProduct() {
   if(!isAdmin) { alert("Bạn không có quyền admin!"); return; }
   const name = document.getElementById("productName").value.trim();
   const price = parseInt(document.getElementById("productPrice").value);
   const desc = document.getElementById("productDesc").value.trim();
   if(!name || isNaN(price) || price <= 0) { alert("Vui lòng nhập tên và giá hợp lệ!"); return; }
-  products.push({ name, price, desc });
+
+  await db.collection("products").add({ name, price, desc });
   document.getElementById("productName").value = "";
   document.getElementById("productPrice").value = "";
   document.getElementById("productDesc").value = "";
-  saveData();
-  renderProducts();
-  updateStats();
   showToast("Đã thêm sản phẩm thành công!");
+  renderProducts();
 }
 
-// Render products
-function renderProducts(keyword="") {
+// ==== HIỂN THỊ SẢN PHẨM ====
+async function renderProducts(keyword="") {
   const list = document.getElementById("productList");
   list.innerHTML = "";
-  let filtered = products;
-  if(keyword) filtered = products.filter(p => p.name.toLowerCase().includes(keyword));
-  filtered.forEach((p, i) => {
+
+  const snapshot = await db.collection("products").get();
+  let products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+  if(keyword) products = products.filter(p => p.name.toLowerCase().includes(keyword));
+
+  products.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "product-card";
 
     let actionsHTML = `
-      <input type="number" id="qty${i}" value="1" min="1" style="width:60px; padding:4px; border-radius:4px; border:1px solid #ccc;">
-      <button class="add-cart" onclick="addToCart(${i})">🛒</button>
+      <input type="number" id="qty${p.id}" value="1" min="1" style="width:60px; padding:4px; border-radius:4px; border:1px solid #ccc;">
+      <button class="add-cart" onclick="addToCart('${p.id}', ${p.price}, '${p.name}')">🛒</button>
     `;
-    if(isAdmin){ actionsHTML += `<button class="delete" onclick="deleteProduct(${i})">❌</button>`; }
+    if(isAdmin) actionsHTML += `<button class="delete" onclick="deleteProduct('${p.id}')">❌</button>`;
 
     div.innerHTML = `
       <div class="product-info">
@@ -76,88 +92,97 @@ function renderProducts(keyword="") {
     `;
     list.appendChild(div);
   });
+
+  updateStats();
 }
 
-// Delete product
-function deleteProduct(index) {
-  if(confirm("Bạn có chắc muốn xóa sản phẩm này?")){
-    products.splice(index,1);
-    saveData();
-    renderProducts();
-    updateStats();
+// ==== XÓA SẢN PHẨM ====
+async function deleteProduct(id) {
+  if(confirm("Bạn có chắc muốn xóa sản phẩm này?")) {
+    await db.collection("products").doc(id).delete();
     showToast("Đã xóa sản phẩm!");
+    renderProducts();
   }
 }
 
-// Save to localStorage
-function saveData() {
-  localStorage.setItem("products", JSON.stringify(products));
-  localStorage.setItem("cart", JSON.stringify(cart));
+// ==== GIỎ HÀNG ====
+async function getCart() {
+  const doc = await db.collection("carts").doc(userId).get();
+  return doc.exists ? doc.data().items : [];
 }
 
-// Add to cart
-function addToCart(index){
-  const qtyInput = document.getElementById(`qty${index}`);
+async function saveCart(cart) {
+  await db.collection("carts").doc(userId).set({ items: cart });
+}
+
+async function addToCart(productId, price, name) {
+  const qtyInput = document.getElementById(`qty${productId}`);
   let qty = parseInt(qtyInput.value);
   if(isNaN(qty) || qty <= 0) qty = 1;
   qtyInput.value = qty;
 
-  const product = products[index];
-  const cartItem = cart.find(c => c.name === product.name);
-  if(cartItem) cartItem.qty += qty;
-  else cart.push({ name: product.name, price: product.price, qty });
-  saveData();
+  let cart = await getCart();
+  const index = cart.findIndex(c => c.productId === productId);
+  if(index >= 0) cart[index].qty += qty;
+  else cart.push({ productId, name, price, qty });
+
+  await saveCart(cart);
   renderCart();
-  updateStats();
   showToast("Đã thêm vào giỏ hàng!");
 }
 
-// Render cart
-function renderCart() {
+async function renderCart() {
   const ul = document.getElementById("cartItems");
   ul.innerHTML = "";
+  const cart = await getCart();
   let total = 0;
+
   cart.forEach((c,i)=>{
     total += c.price * c.qty;
-    let li = document.createElement("li");
+    const li = document.createElement("li");
     li.innerHTML = `${c.name} - ${c.price.toLocaleString()} đ x ${c.qty} 
       <button class="cart-item-delete" onclick="deleteCartItem(${i})">❌</button>`;
     ul.appendChild(li);
   });
+
   document.getElementById("totalPrice").textContent = total.toLocaleString();
+  updateStats();
 }
 
-// Delete cart item
-function deleteCartItem(index){
-  if(confirm("Bạn có chắc muốn xóa sản phẩm trong giỏ hàng?")){
+async function deleteCartItem(index) {
+  if(confirm("Bạn có chắc muốn xóa sản phẩm trong giỏ hàng?")) {
+    let cart = await getCart();
     cart.splice(index,1);
-    saveData();
+    await saveCart(cart);
     renderCart();
-    updateStats();
     showToast("Đã xóa sản phẩm khỏi giỏ hàng!");
   }
 }
 
-// Toggle cart visibility
-function toggleCart(){
+function toggleCart() {
   const overlay = document.getElementById("cartOverlay");
   overlay.style.display = overlay.style.display === "flex" ? "none" : "flex";
 }
 
-// Update stats
-function updateStats(){
-  document.getElementById("totalProducts").textContent = products.length;
-  let totalRevenue = cart.reduce((sum, c) => sum + c.price * c.qty, 0);
+// ==== THỐNG KÊ ====
+async function updateStats() {
+  const snapshot = await db.collection("products").get();
+  const totalProducts = snapshot.size;
+
+  const cart = await getCart();
+  const totalRevenue = cart.reduce((sum,c) => sum + c.price * c.qty, 0);
+
+  document.getElementById("totalProducts").textContent = totalProducts;
   document.getElementById("totalRevenue").textContent = totalRevenue.toLocaleString();
 }
 
-// Search products
+// ==== TÌM KIẾM ====
 function searchProductList() {
   const keyword = document.getElementById("searchProduct").value.toLowerCase().trim();
   renderProducts(keyword);
 }
 
-// Ẩn/hiện danh sách sản phẩm
+// ==== ẨN/HIỆN DANH SÁCH SẢN PHẨM ====
 const productPanel = document.getElementById("productList").parentElement;
 function showHome() { productPanel.style.display = "none"; }
 function showProductList() { productPanel.style.display = "block"; renderProducts(); }
