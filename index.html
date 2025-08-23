@@ -18,35 +18,37 @@
 
   <main>
     <!-- Thống kê -->
-    <section class="stats">
-      <p>Tổng số sản phẩm: <span id="totalProducts">0</span></p>
-      <p>Doanh thu tạm tính: <span id="totalRevenue">0</span> đ</p>
+    <section class="stats card">
+      <p>📊 Tổng số sản phẩm: <span id="totalProducts">0</span></p>
+      <p>💰 Doanh thu tạm tính: <span id="totalRevenue">0</span> đ</p>
     </section>
 
     <!-- Thêm sản phẩm (chỉ admin) -->
-    <section class="add-product">
-      <h2>Thêm sản phẩm</h2>
+    <section class="add-product card">
+      <h2>➕ Thêm sản phẩm</h2>
       <input type="text" id="productName" placeholder="Tên sản phẩm">
       <input type="number" id="productPrice" placeholder="Giá sản phẩm">
       <textarea id="productDesc" placeholder="Mô tả sản phẩm"></textarea>
-      <button onclick="addProduct()">➕ Thêm</button>
+      <button onclick="addProduct()">Thêm</button>
     </section>
 
     <!-- Tìm kiếm -->
     <section class="search">
-      <input type="text" id="searchProduct" placeholder="Tìm kiếm sản phẩm..." oninput="searchProductList()">
+      <input type="text" id="searchProduct" placeholder="🔍 Tìm kiếm sản phẩm..." oninput="searchProductList()">
     </section>
 
     <!-- Danh sách sản phẩm -->
     <section class="products">
-      <div id="productList"></div>
+      <div id="productList" class="product-grid">
+        <!-- Sản phẩm sẽ hiển thị ở đây -->
+      </div>
     </section>
   </main>
 
   <!-- Popup giỏ hàng -->
   <div id="cartOverlay" class="overlay">
-    <div class="cart">
-      <h2>Giỏ hàng</h2>
+    <div class="cart card">
+      <h2>🛒 Giỏ hàng</h2>
       <ul id="cartItems"></ul>
       <p><b>Tổng cộng:</b> <span id="totalPrice">0</span> đ</p>
       <button onclick="toggleCart()">Đóng</button>
@@ -55,8 +57,8 @@
 
   <!-- Popup admin login -->
   <div id="adminLoginPopup" class="overlay">
-    <div class="popup">
-      <h2>Đăng nhập Admin</h2>
+    <div class="popup card">
+      <h2>🔑 Đăng nhập Admin</h2>
       <input type="password" id="adminPassword" placeholder="Nhập mật khẩu">
       <button onclick="adminLogin()">Đăng nhập</button>
       <button onclick="closeAdminLogin()">Đóng</button>
