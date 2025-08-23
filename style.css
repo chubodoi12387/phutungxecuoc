@@ -39,7 +39,6 @@ h3 { margin-top: 20px; color: #333; }
   border-radius: 8px;
   cursor: pointer;
   font-weight: bold;
-  transition: background 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,22 +46,28 @@ h3 { margin-top: 20px; color: #333; }
 .form button:hover { background: #155bb5; }
 
 /* Tìm kiếm */
-.suggestions {
-  list-style: none;
-  padding-left: 0;
-  margin-top: 5px;
-  max-height: 150px;
-  overflow-y: auto;
+.search-bar {
+  display: flex;
+  margin-bottom: 15px;
+}
+.search-bar input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 8px 0 0 8px;
   border: 1px solid #bbb;
-  border-radius: 8px;
-  background: #fff;
-  display: none;
+  font-size: 14px;
 }
-.suggestions li {
-  padding: 6px 10px;
+.search-bar button {
+  padding: 8px 12px;
+  border: 1px solid #bbb;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  background: #1a73e8;
+  color: white;
   cursor: pointer;
+  font-weight: bold;
 }
-.suggestions li:hover { background: #d0e8ff; }
+.search-bar button:hover { background: #155bb5; }
 
 /* Button xem giỏ hàng */
 .show-cart-btn {
@@ -231,4 +236,7 @@ h3 { margin-top: 20px; color: #333; }
   .left-panel, .middle-panel { width: 95%; margin: 10px auto; }
   .product-card { flex-direction: column; align-items: flex-start; }
   .product-actions { margin-top: 10px; }
+  .search-bar { flex-direction: column; }
+  .search-bar input { border-radius: 8px; margin-bottom: 5px; }
+  .search-bar button { border-radius: 8px; }
 }
