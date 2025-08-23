@@ -1,170 +1,96 @@
-/* Reset cơ bản */
-* { margin:0; padding:0; box-sizing:border-box; }
-
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: #f4f6f8;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f6f8;
 }
 
-/* Header */
-header {
-    background: #007BFF;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    font-size: 26px;
-    font-weight: bold;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
-/* Container hai bên */
 .container {
-    display: flex;
-    height: calc(100vh - 80px);
+  display: flex;
+  height: 100vh;
 }
 
-/* Bên trái Admin */
 .left-panel {
-    width: 280px;
-    background: #ffffff;
-    padding: 20px;
-    box-shadow: 2px 0 8px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+  width: 30%;
+  background: #ffffff;
+  padding: 20px;
+  border-right: 2px solid #ddd;
+  box-sizing: border-box;
 }
 
-.left-panel h2, .left-panel h3 {
-    margin-bottom: 10px;
-    color: #007BFF;
-}
-
-.left-panel button {
-    padding: 10px;
-    background: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.left-panel button:hover {
-    background: #0056b3;
-}
-
-/* Bên phải danh sách sản phẩm */
 .right-panel {
-    flex: 1;
-    padding: 20px;
-    overflow-y: auto;
+  width: 70%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.right-panel h2 {
-    margin-bottom: 15px;
-    color: #007BFF;
+h2 {
+  margin-top: 0;
+  color: #333;
 }
 
-/* Danh sách sản phẩm */
-#product-list div {
-    background: #ffffff;
-    padding: 15px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: 0.3s;
+.form {
+  margin-bottom: 20px;
 }
 
-#product-list div:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+.form input {
+  padding: 8px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-#product-list button {
-    padding: 5px 12px;
-    background: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 0.3s;
+.form button {
+  padding: 8px 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-#product-list button:hover {
-    background: #a71d2a;
+.form button:hover {
+  background: #0056b3;
 }
 
-/* Responsive điện thoại */
-@media screen and (max-width: 768px) {
-    .container {
-        flex-direction: column;
-        height: auto;
-    }
-    .left-panel {
-        width: 100%;
-        flex-direction: row;
-        overflow-x: auto;
-    }
-    .right-panel {
-        padding: 10px;
-    }
-}
-.product-info {
-    display: flex;
-    justify-content: space-between; /* tên trái, giá phải */
-    align-items: center;
-    width: 70%; /* chiếm 70% khung, button bên phải chiếm phần còn lại */
+#product-list .product {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 8px;
+  background: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.product-name {
-    font-weight: bold;
-    font-size: 16px;
+.product span {
+  flex: 1;
+  margin-right: 10px;
 }
 
-.product-price {
-    font-size: 14px;
-    color: #555;
+.product input {
+  width: 60px;
+  margin-right: 10px;
 }
-.product-actions {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+
+.product button {
+  margin-left: 5px;
 }
 
 #cart {
-    background:#f9f9f9;
-    padding:10px;
-    border-radius:8px;
-    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+  margin-top: 20px;
+  padding: 10px;
+  background: #fdfdfd;
+  border: 1px solid #ddd;
+  border-radius: 6px;
 }
 
 #cart ul {
-    list-style: none;
-    padding-left: 0;
+  list-style: none;
+  padding: 0;
 }
 
 #cart li {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
+  margin: 5px 0;
 }
-
-#cart button {
-    background: #dc3545;
-    color:white;
-    border:none;
-    border-radius:4px;
-    padding:2px 6px;
-    cursor:pointer;
-}
-#cart button:hover {
-    background:#a71d2a;
-}
-
-
-
-
-
