@@ -15,7 +15,6 @@ function addProduct() {
 
   const product = { name, price };
   products.push(product);
-  cart.push({ ...product, qty: 1 }); // Thêm luôn vào giỏ hàng
 
   document.getElementById("productName").value = "";
   document.getElementById("productPrice").value = "";
@@ -25,6 +24,7 @@ function addProduct() {
   updateStats();
 }
 
+// Render sản phẩm + nút xóa cho admin
 function renderProducts() {
   const list = document.getElementById("productList");
   list.innerHTML = "";
@@ -46,17 +46,19 @@ function renderProducts() {
   });
 }
 
-// Xóa sản phẩm khỏi danh sách sản phẩm (Admin)
+// Xóa sản phẩm khỏi danh sách (Admin)
 function deleteProduct(index) {
-  const removed = products.splice(index,1)[0];
-  cart = cart.filter(item => item.name !== removed.name); // Xóa luôn trong giỏ hàng nếu muốn
-  saveData();
-  renderProducts();
-  renderCart();
-  updateStats();
+  if(confirm("Bạn có chắc muốn xóa sản phẩm này khỏi danh sách không?")) {
+    const removed = products.splice(index,1)[0];
+    cart = cart.filter(item => item.name !== removed.name); // Xóa trong giỏ hàng nếu muốn
+    saveData();
+    renderProducts();
+    renderCart();
+    updateStats();
+  }
 }
 
-// Thêm sản phẩm vào giỏ hàng
+// Thêm sản phẩm vào giỏ hàng (khách)
 function addToCart(index) {
   const qty = parseInt(document.getElementById("qty"+index).value);
   if(qty <= 0) return;
@@ -65,9 +67,10 @@ function addToCart(index) {
   if(item) item.qty += qty;
   else cart.push({ ...product, qty });
   saveData();
+  renderCart();
 }
 
-// Render giỏ hàng (khách)
+// Render giỏ hàng
 function renderCart() {
   const cartList = document.getElementById("cartItems");
   cartList.innerHTML = "";
@@ -84,9 +87,11 @@ function renderCart() {
 
 // Xóa sản phẩm khỏi giỏ hàng (khách)
 function deleteCartItem(index) {
-  cart.splice(index,1);
-  saveData();
-  renderCart();
+  if(confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?")) {
+    cart.splice(index,1);
+    saveData();
+    renderCart();
+  }
 }
 
 // Cập nhật thống kê
