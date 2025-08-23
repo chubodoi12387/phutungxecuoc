@@ -1,97 +1,83 @@
 let products = [];
 let cart = [];
+const ADMIN_PASSWORD = "1234";
+let isAdmin = false;
+
+window.onload = function() {
+  const pass = prompt("Nhập mật khẩu admin (bỏ qua nếu là khách):");
+  if(pass === ADMIN_PASSWORD) isAdmin = true;
+  if(!isAdmin) document.getElementById("adminPanel").style.display = "none";
+  renderProducts();
+};
 
 function addProduct() {
-  const name = document.getElementById("product-name").value.trim();
-  const price = parseFloat(document.getElementById("product-price").value);
+  const pass = document.getElementById("adminPass").value;
+  if(pass !== ADMIN_PASSWORD) { alert("Sai mật khẩu admin!"); return; }
 
-  if (!name || isNaN(price)) {
-    alert("Vui lòng nhập tên và giá sản phẩm hợp lệ!");
-    return;
-  }
+  const name = document.getElementById("productName").value.trim();
+  const price = parseInt(document.getElementById("productPrice").value);
+
+  if(!name || !price) { alert("Vui lòng nhập tên và giá!"); return; }
 
   products.push({ name, price });
-  document.getElementById("product-name").value = "";
-  document.getElementById("product-price").value = "";
-
+  document.getElementById("productName").value = "";
+  document.getElementById("productPrice").value = "";
   renderProducts();
   updateStats();
 }
 
 function renderProducts() {
-  const list = document.getElementById("product-list");
+  const list = document.getElementById("productList");
   list.innerHTML = "";
-
-  products.forEach((p, index) => {
+  products.forEach((p, i) => {
     const div = document.createElement("div");
-    div.className = "product";
+    div.className = "product-card";
     div.innerHTML = `
-      <span>${p.name}</span>
-      <span>${p.price.toLocaleString()} VND</span>
-      <input type="number" id="qty-${index}" value="1" min="1">
-      <button onclick="addToCart(${index})">🛒 Thêm</button>
-      <button onclick="removeProduct(${index})">❌ Xóa</button>
+      <div class="product-info">
+        <span><b>${p.name}</b></span>
+        <span>${p.price} đ</span>
+      </div>
+      <div class="product-actions">
+        <input type="number" id="qty${i}" value="1" min="1">
+        <button class="add-cart" onclick="addToCart(${i})">🛒</button>
+        ${isAdmin ? `<button class="delete" onclick="deleteProduct(${i})">❌</button>` : ""}
+      </div>
     `;
     list.appendChild(div);
   });
 }
 
-function removeProduct(index) {
+function deleteProduct(index) {
   products.splice(index, 1);
   renderProducts();
   updateStats();
 }
 
 function updateStats() {
-  document.getElementById("total-products").textContent = products.length;
-  const totalRevenue = products.reduce((sum, p) => sum + p.price, 0);
-  document.getElementById("total-revenue").textContent = totalRevenue.toLocaleString();
+  document.getElementById("totalProducts").textContent = products.length;
+  const totalRev = products.reduce((sum,p)=>sum+p.price,0);
+  document.getElementById("totalRevenue").textContent = totalRev;
 }
 
 function addToCart(index) {
-  const qty = parseInt(document.getElementById(`qty-${index}`).value);
-  if (qty <= 0) return;
-
+  const qty = parseInt(document.getElementById("qty"+index).value);
+  if(qty <= 0) return;
   const product = products[index];
-  const existing = cart.find(item => item.name === product.name);
-
-  if (existing) {
-    existing.qty += qty;
-  } else {
-    cart.push({ ...product, qty });
-  }
-
+  const item = cart.find(c => c.name===product.name);
+  if(item) item.qty += qty;
+  else cart.push({ ...product, qty });
   renderCart();
 }
 
 function renderCart() {
-  const cartList = document.getElementById("cart-list");
+  const cartList = document.getElementById("cartItems");
   cartList.innerHTML = "";
-
-  if (cart.length === 0) {
-    document.getElementById("cart").innerHTML = `
-      <p>Không có sản phẩm</p>
-      <ul id="cart-list"></ul>
-      <p>Tổng: <span id="cart-total">0</span> VND</p>
-    `;
-    return;
-  }
-
   let total = 0;
-  cart.forEach((item, index) => {
+  cart.forEach(item=>{
     total += item.price * item.qty;
     const li = document.createElement("li");
-    li.innerHTML = `
-      ${item.name} - ${item.qty} x ${item.price.toLocaleString()} VND
-      <button onclick="removeFromCart(${index})">❌</button>
-    `;
+    li.textContent = `${item.name} x ${item.qty} = ${item.price*item.qty} đ`;
     cartList.appendChild(li);
   });
-
-  document.getElementById("cart-total").textContent = total.toLocaleString();
-}
-
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  renderCart();
+  document.getElementById("totalPrice").textContent = total;
 }
