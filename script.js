@@ -36,7 +36,6 @@ function addProduct() {
   if(!isAdmin) { alert("Bạn không có quyền admin!"); return; }
   const name = document.getElementById("productName").value.trim();
   const price = parseInt(document.getElementById("productPrice").value);
-  const Description = document.getElementById('productDescription').value;
   if(!name || !price) { alert("Vui lòng nhập tên và giá!"); return; }
   products.push({ name, price });
   document.getElementById("productName").value = "";
@@ -152,5 +151,4 @@ function searchProductList() {
 const productPanel = document.getElementById("productList").parentElement;
 function showHome() { productPanel.style.display = "none"; }
 function showProductList() { productPanel.style.display = "block"; renderProducts(); }
-
 
