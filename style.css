@@ -20,6 +20,25 @@ body {
 h2 { text-align: center; margin-bottom: 15px; color: #1a73e8; }
 h3 { margin-top: 20px; color: #333; }
 
+/* Nút điều hướng */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.nav-buttons button {
+  flex: 1;
+  margin: 0 5px;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: #1a73e8;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+.nav-buttons button:hover { background: #155bb5; }
+
 /* Form thêm sản phẩm */
 .form input {
   width: 100%;
