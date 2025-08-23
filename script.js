@@ -147,3 +147,9 @@ function saveData() {
   localStorage.setItem("products", JSON.stringify(products));
   localStorage.setItem("cart", JSON.stringify(cart));
 }
+// Nhấn Enter ở popup admin login
+document.getElementById("adminPassword").addEventListener("keypress", function(e){
+  if(e.key === "Enter") adminLogin();
+});
+
+
