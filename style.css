@@ -92,6 +92,8 @@ h3 { margin-top: 20px; color: #333; }
 .product-actions button:hover { transform: scale(1.05); }
 .add-cart { background: #28a745; }
 .add-cart:hover { background: #218838; }
+.delete { background: #dc3545; }
+.delete:hover { background: #a71d2a; }
 
 /* Giỏ hàng overlay */
 .cart-overlay {
@@ -122,3 +124,16 @@ h3 { margin-top: 20px; color: #333; }
 }
 #cartItems { list-style: none; padding-left: 0; }
 #cartItems li { border-bottom: 1px solid #ddd; padding: 8px 0; }
+
+/* Nút xóa trong giỏ hàng */
+.cart-item-delete {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 2px 6px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.cart-item-delete:hover { background: #a71d2a; }
