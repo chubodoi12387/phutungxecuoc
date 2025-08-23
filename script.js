@@ -7,6 +7,7 @@ window.onload = function() {
   renderProducts();
   updateStats();
   renderCart();
+  showHome(); // Ẩn danh sách sản phẩm mặc định
 };
 
 // Toast
@@ -142,3 +143,8 @@ function searchProductList() {
   const keyword = document.getElementById("searchProduct").value.toLowerCase().trim();
   renderProducts(keyword);
 }
+
+// Ẩn/hiện danh sách sản phẩm
+const productPanel = document.getElementById("productList").parentElement;
+function showHome() { productPanel.style.display = "none"; }
+function showProductList() { productPanel.style.display = "block"; renderProducts(); }
