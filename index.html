@@ -19,6 +19,8 @@
     <h3>Thống kê</h3>
     <p>Tổng sản phẩm: <span id="totalProducts">0</span></p>
     <p>Tổng doanh thu: <span id="totalRevenue">0</span> đ</p>
+
+    <button class="show-cart-btn" onclick="toggleCart()">🛒 Xem giỏ hàng</button>
   </div>
 
   <!-- Bên giữa: Danh sách sản phẩm -->
@@ -27,11 +29,14 @@
     <div id="productList"></div>
   </div>
 
-  <!-- Bên phải: Giỏ hàng -->
-  <div class="panel right-panel">
-    <h2>Giỏ hàng</h2>
-    <ul id="cartItems"></ul>
-    <p><b>Tổng:</b> <span id="totalPrice">0</span> đ</p>
+  <!-- Giỏ hàng ẩn (popup/overlay) -->
+  <div id="cartOverlay" class="cart-overlay">
+    <div class="cart-content">
+      <span class="close-btn" onclick="toggleCart()">❌</span>
+      <h2>Giỏ hàng</h2>
+      <ul id="cartItems"></ul>
+      <p><b>Tổng:</b> <span id="totalPrice">0</span> đ</p>
+    </div>
   </div>
 
 <script src="script.js"></script>
