@@ -7,7 +7,7 @@ window.onload = function() {
   renderProducts();
   updateStats();
   renderCart();
-  showHome(); // Ẩn danh sách sản phẩm mặc định
+  showHome(); 
 };
 
 // Toast
@@ -36,10 +36,12 @@ function addProduct() {
   if(!isAdmin) { alert("Bạn không có quyền admin!"); return; }
   const name = document.getElementById("productName").value.trim();
   const price = parseInt(document.getElementById("productPrice").value);
+  const desc = document.getElementById("productDesc").value.trim();
   if(!name || !price) { alert("Vui lòng nhập tên và giá!"); return; }
-  products.push({ name, price });
+  products.push({ name, price, desc });
   document.getElementById("productName").value = "";
   document.getElementById("productPrice").value = "";
+  document.getElementById("productDesc").value = "";
   saveData();
   renderProducts();
   updateStats();
@@ -62,6 +64,7 @@ function renderProducts(keyword="") {
       <div class="product-info">
         <span><b>${p.name}</b></span>
         <span>${p.price} đ</span>
+        <small>${p.desc || ""}</small>
       </div>
       <div class="product-actions">
         ${actionsHTML}
@@ -134,12 +137,9 @@ function toggleCart(){
 // Update stats
 function updateStats(){
   document.getElementById("totalProducts").textContent = products.length;
-
-  // Tính tổng doanh thu dựa trên giỏ hàng
   let totalRevenue = cart.reduce((sum, c) => sum + c.price * c.qty, 0);
   document.getElementById("totalRevenue").textContent = totalRevenue;
 }
-
 
 // Search products
 function searchProductList() {
@@ -151,4 +151,3 @@ function searchProductList() {
 const productPanel = document.getElementById("productList").parentElement;
 function showHome() { productPanel.style.display = "none"; }
 function showProductList() { productPanel.style.display = "block"; renderProducts(); }
-
