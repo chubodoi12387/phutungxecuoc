@@ -34,7 +34,6 @@
     <div class="form" id="adminForm">
       <input type="text" id="productName" placeholder="Tên sản phẩm 📝">
       <input type="number" id="productPrice" placeholder="Giá sản phẩm 💰">
-      <input type="text" id="productDesc" placeholder="Mô tả sản phẩm 📄">
       <button onclick="addProduct()">➕ Thêm sản phẩm</button>
     </div>
 
@@ -69,14 +68,13 @@
   </div>
 
   <!-- Popup chi tiết sản phẩm -->
-  <div id="productDetailOverlay" class="product-detail-overlay">
+  <div id="productDetailPopup" class="product-detail-popup">
     <div class="product-detail-content">
       <span class="close-btn" onclick="closeProductDetail()">❌</span>
       <h2 id="detailName"></h2>
       <p><b>Giá:</b> <span id="detailPrice"></span> đ</p>
-      <p><b>Mô tả:</b></p>
       <p id="detailDesc"></p>
-      <button onclick="addDetailToCart()">🛒 Thêm vào giỏ</button>
+      <button onclick="closeProductDetail()">Đóng</button>
     </div>
   </div>
 
@@ -91,9 +89,6 @@
     if(e.key === "Enter") addProduct();
   });
   document.getElementById("productPrice").addEventListener("keypress", function(e){
-    if(e.key === "Enter") addProduct();
-  });
-  document.getElementById("productDesc").addEventListener("keypress", function(e){
     if(e.key === "Enter") addProduct();
   });
 
