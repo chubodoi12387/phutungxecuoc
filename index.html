@@ -24,6 +24,12 @@
   <div class="panel left-panel">
     <h2>⚙️ Quản lý sản phẩm 🏗️</h2>
 
+    <!-- Tìm kiếm sản phẩm -->
+    <h3>🔍 Tìm sản phẩm</h3>
+    <input type="text" id="searchProduct" placeholder="Nhập tên sản phẩm...">
+    <ul id="searchSuggestions" class="suggestions"></ul>
+
+    <!-- Form thêm sản phẩm -->
     <div class="form" id="adminForm">
       <input type="text" id="productName" placeholder="Tên sản phẩm 📝">
       <input type="number" id="productPrice" placeholder="Giá sản phẩm 💰">
@@ -59,12 +65,17 @@
 <script src="script.js"></script>
 
 <script>
-  // Nhấn Enter thêm sản phẩm
+  // Nhấn Enter để thêm sản phẩm
   document.getElementById("productName").addEventListener("keypress", function(e){
     if(e.key === "Enter") addProduct();
   });
   document.getElementById("productPrice").addEventListener("keypress", function(e){
     if(e.key === "Enter") addProduct();
+  });
+
+  // Nhấn Enter khi đăng nhập admin
+  document.getElementById("adminPassword").addEventListener("keypress", function(e){
+    if(e.key === "Enter") adminLogin();
   });
 </script>
 
