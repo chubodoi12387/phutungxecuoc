@@ -112,4 +112,38 @@ function renderCart() {
   cart.forEach((item, idx) => {
     total += item.price * item.qty;
     const li = document.createElement("li");
-    li.innerHTML = `${item.name} x ${
+    li.innerHTML = `${item.name} x ${item.qty} - ${item.price*item.qty} đ
+      <button class="cart-item-delete" onclick="deleteCartItem(${idx})">❌</button>`;
+    cartList.appendChild(li);
+  });
+  document.getElementById("totalPrice").textContent = total;
+}
+
+// Delete cart item
+function deleteCartItem(index) {
+  if(confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?")) {
+    cart.splice(index,1);
+    saveData();
+    renderCart();
+    updateStats();
+  }
+}
+
+// Toggle cart
+function toggleCart() {
+  const overlay = document.getElementById("cartOverlay");
+  overlay.style.display = overlay.style.display==="flex" ? "none" : "flex";
+}
+
+// Update stats
+function updateStats() {
+  document.getElementById("totalProducts").textContent = products.length;
+  let revenue = cart.reduce((sum,i)=>sum+i.price*i.qty,0);
+  document.getElementById("totalRevenue").textContent = revenue;
+}
+
+// Save to localStorage
+function saveData() {
+  localStorage.setItem("products", JSON.stringify(products));
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
