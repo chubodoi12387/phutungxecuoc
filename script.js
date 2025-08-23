@@ -14,13 +14,21 @@ function renderProducts() {
     list.innerHTML = '';
     products.forEach((p,i)=>{
         const div = document.createElement('div');
-        div.innerHTML = `<strong>${p.name}</strong> - ${p.price} VND <button onclick="removeProduct(${i})">Xóa</button>`;
+        div.innerHTML = `
+            <div>
+                <strong>${p.name}</strong><br>
+                <small>${p.price} VND</small>
+            </div>
+            <button onclick="removeProduct(${i})">Xóa</button>
+        `;
         list.appendChild(div);
     });
     document.getElementById('total').innerText = products.length;
 }
 
 function removeProduct(index) {
-    products.splice(index,1);
-    renderProducts();
+    if(confirm("Bạn có chắc muốn xóa sản phẩm này?")){
+        products.splice(index,1);
+        renderProducts();
+    }
 }
