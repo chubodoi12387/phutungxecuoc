@@ -112,4 +112,22 @@ header {
         padding: 10px;
     }
 }
+.product-info {
+    display: flex;
+    justify-content: space-between; /* tên trái, giá phải */
+    align-items: center;
+    width: 70%; /* chiếm 70% khung, button bên phải chiếm phần còn lại */
+}
+
+.product-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.product-price {
+    font-size: 14px;
+    color: #555;
+}
+
+
 
