@@ -15,9 +15,9 @@ function renderProducts() {
     products.forEach((p,i)=>{
         const div = document.createElement('div');
         div.innerHTML = `
-            <div>
-                <strong>${p.name}</strong><br>
-                <small>${p.price} VND</small>
+            <div class="product-info">
+                <span class="product-name">${p.name}</span>
+                <span class="product-price">${p.price} VND</span>
             </div>
             <button onclick="removeProduct(${i})">Xóa</button>
         `;
@@ -26,9 +26,11 @@ function renderProducts() {
     document.getElementById('total').innerText = products.length;
 }
 
+
 function removeProduct(index) {
     if(confirm("Bạn có chắc muốn xóa sản phẩm này?")){
         products.splice(index,1);
         renderProducts();
     }
 }
+
