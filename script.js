@@ -1,27 +1,26 @@
-let products = [];
-let cart = [];
-const ADMIN_PASSWORD = "1234";
-let isAdmin = false;
+let products = JSON.parse(localStorage.getItem("products") || "[]");
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
 window.onload = function() {
-  const pass = prompt("Nhập mật khẩu admin (bỏ qua nếu là khách):");
-  if(pass === ADMIN_PASSWORD) isAdmin = true;
-  if(!isAdmin) document.getElementById("adminPanel").style.display = "none";
   renderProducts();
+  renderCart();
+  updateStats();
 };
 
 function addProduct() {
-  const pass = document.getElementById("adminPass").value;
-  if(pass !== ADMIN_PASSWORD) { alert("Sai mật khẩu admin!"); return; }
-
   const name = document.getElementById("productName").value.trim();
   const price = parseInt(document.getElementById("productPrice").value);
 
   if(!name || !price) { alert("Vui lòng nhập tên và giá!"); return; }
 
-  products.push({ name, price });
+  const product = { name, price };
+  products.push(product);
+  cart.push({ ...product, qty: 1 }); // Thêm luôn vào giỏ hàng
+
   document.getElementById("productName").value = "";
   document.getElementById("productPrice").value = "";
+
+  saveData();
   renderProducts();
   updateStats();
 }
@@ -40,23 +39,10 @@ function renderProducts() {
       <div class="product-actions">
         <input type="number" id="qty${i}" value="1" min="1">
         <button class="add-cart" onclick="addToCart(${i})">🛒</button>
-        ${isAdmin ? `<button class="delete" onclick="deleteProduct(${i})">❌</button>` : ""}
       </div>
     `;
     list.appendChild(div);
   });
-}
-
-function deleteProduct(index) {
-  products.splice(index, 1);
-  renderProducts();
-  updateStats();
-}
-
-function updateStats() {
-  document.getElementById("totalProducts").textContent = products.length;
-  const totalRev = products.reduce((sum,p)=>sum+p.price,0);
-  document.getElementById("totalRevenue").textContent = totalRev;
 }
 
 function addToCart(index) {
@@ -66,6 +52,7 @@ function addToCart(index) {
   const item = cart.find(c => c.name===product.name);
   if(item) item.qty += qty;
   else cart.push({ ...product, qty });
+  saveData();
   renderCart();
 }
 
@@ -80,4 +67,15 @@ function renderCart() {
     cartList.appendChild(li);
   });
   document.getElementById("totalPrice").textContent = total;
+}
+
+function updateStats() {
+  document.getElementById("totalProducts").textContent = products.length;
+  const totalRev = products.reduce((sum,p)=>sum+p.price,0);
+  document.getElementById("totalRevenue").textContent = totalRev;
+}
+
+function saveData() {
+  localStorage.setItem("products", JSON.stringify(products));
+  localStorage.setItem("cart", JSON.stringify(cart));
 }
