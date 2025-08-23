@@ -2,95 +2,70 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Phụ tùng xe cuốc</title>
+  <title>Quản lý sản phẩm</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <!-- Nút đăng nhập admin góc trên -->
-  <button id="adminLoginBtn" class="admin-login-btn" onclick="showAdminLogin()">Admin 🔒</button>
-
-  <!-- Popup nhập mật khẩu admin -->
-  <div id="adminLoginPopup" class="admin-login-popup">
-    <div class="admin-login-content">
-      <span class="close-btn" onclick="closeAdminLogin()">❌</span>
-      <h3>Đăng nhập Admin</h3>
-      <input type="password" id="adminPassword" placeholder="Nhập mật khẩu">
-      <button onclick="adminLogin()">Đăng nhập</button>
-    </div>
-  </div>
-
-  <!-- Bên trái: Admin panel -->
-  <div class="panel left-panel">
-    <h2>⚙️ Quản lý sản phẩm 🏗️</h2>
-
-    <!-- Nút điều hướng -->
-    <div class="nav-buttons">
+  <header>
+    <h1>Quản lý sản phẩm</h1>
+    <nav>
       <button onclick="showHome()">🏠 Trang chủ</button>
-      <button onclick="showProductList()">📋 Danh mục sản phẩm</button>
-    </div>
+      <button onclick="showProductList()">📦 Danh sách sản phẩm</button>
+      <button onclick="toggleCart()">🛒 Giỏ hàng</button>
+      <button onclick="showAdminLogin()">🔑 Admin</button>
+    </nav>
+  </header>
 
-    <!-- Form thêm sản phẩm -->
-    <div class="form" id="adminForm">
-      <input type="text" id="productName" placeholder="Tên sản phẩm 📝">
-      <input type="number" id="productPrice" placeholder="Giá sản phẩm 💰">
-      <button onclick="addProduct()">➕ Thêm sản phẩm</button>
-    </div>
+  <main>
+    <!-- Thống kê -->
+    <section class="stats">
+      <p>Tổng số sản phẩm: <span id="totalProducts">0</span></p>
+      <p>Doanh thu tạm tính: <span id="totalRevenue">0</span> đ</p>
+    </section>
 
-    <h3>📊 Thống kê</h3>
-    <p>🛠️ Tổng sản phẩm: <span id="totalProducts">0</span></p>
-    <p>💵 Tổng doanh thu: <span id="totalRevenue">0</span> đ</p>
+    <!-- Thêm sản phẩm (chỉ admin) -->
+    <section class="add-product">
+      <h2>Thêm sản phẩm</h2>
+      <input type="text" id="productName" placeholder="Tên sản phẩm">
+      <input type="number" id="productPrice" placeholder="Giá sản phẩm">
+      <textarea id="productDesc" placeholder="Mô tả sản phẩm"></textarea>
+      <button onclick="addProduct()">➕ Thêm</button>
+    </section>
 
-    <button class="show-cart-btn" onclick="toggleCart()">🛒 Xem giỏ hàng</button>
-  </div>
+    <!-- Tìm kiếm -->
+    <section class="search">
+      <input type="text" id="searchProduct" placeholder="Tìm kiếm sản phẩm..." oninput="searchProductList()">
+    </section>
 
-  <!-- Bên giữa: Danh sách sản phẩm -->
-  <div class="panel middle-panel">
-    <h2>Danh sách sản phẩm</h2>
+    <!-- Danh sách sản phẩm -->
+    <section class="products">
+      <div id="productList"></div>
+    </section>
+  </main>
 
-    <!-- Tìm kiếm sản phẩm -->
-    <div class="search-bar">
-      <input type="text" id="searchProduct" placeholder="Nhập tên sản phẩm...">
-      <button onclick="searchProductList()">🔍</button>
-    </div>
-
-    <div id="productList"></div>
-  </div>
-
-  <!-- Giỏ hàng ẩn (popup/overlay) -->
-  <div id="cartOverlay" class="cart-overlay">
-    <div class="cart-content">
-      <span class="close-btn" onclick="toggleCart()">❌</span>
+  <!-- Popup giỏ hàng -->
+  <div id="cartOverlay" class="overlay">
+    <div class="cart">
       <h2>Giỏ hàng</h2>
       <ul id="cartItems"></ul>
-      <p><b>Tổng:</b> <span id="totalPrice">0</span> đ</p>
+      <p><b>Tổng cộng:</b> <span id="totalPrice">0</span> đ</p>
+      <button onclick="toggleCart()">Đóng</button>
     </div>
   </div>
 
-  <!-- Toast thông báo -->
-  <div id="toast" class="toast"></div>
+  <!-- Popup admin login -->
+  <div id="adminLoginPopup" class="overlay">
+    <div class="popup">
+      <h2>Đăng nhập Admin</h2>
+      <input type="password" id="adminPassword" placeholder="Nhập mật khẩu">
+      <button onclick="adminLogin()">Đăng nhập</button>
+      <button onclick="closeAdminLogin()">Đóng</button>
+    </div>
+  </div>
 
-<script src="script.js"></script>
+  <!-- Toast -->
+  <div id="toast"></div>
 
-<script>
-  // Nhấn Enter để thêm sản phẩm
-  document.getElementById("productName").addEventListener("keypress", function(e){
-    if(e.key === "Enter") addProduct();
-  });
-  document.getElementById("productPrice").addEventListener("keypress", function(e){
-    if(e.key === "Enter") addProduct();
-  });
-
-  // Nhấn Enter khi đăng nhập admin
-  document.getElementById("adminPassword").addEventListener("keypress", function(e){
-    if(e.key === "Enter") adminLogin();
-  });
-
-  // Nhấn Enter trong ô tìm kiếm
-  document.getElementById("searchProduct").addEventListener("keypress", function(e){
-    if(e.key === "Enter") searchProductList();
-  });
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
