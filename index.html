@@ -24,11 +24,6 @@
   <div class="panel left-panel">
     <h2>⚙️ Quản lý sản phẩm 🏗️</h2>
 
-    <!-- Tìm kiếm sản phẩm -->
-    <h3>🔍 Tìm sản phẩm</h3>
-    <input type="text" id="searchProduct" placeholder="Nhập tên sản phẩm...">
-    <ul id="searchSuggestions" class="suggestions"></ul>
-
     <!-- Form thêm sản phẩm -->
     <div class="form" id="adminForm">
       <input type="text" id="productName" placeholder="Tên sản phẩm 📝">
@@ -46,6 +41,13 @@
   <!-- Bên giữa: Danh sách sản phẩm -->
   <div class="panel middle-panel">
     <h2>Danh sách sản phẩm</h2>
+
+    <!-- Tìm kiếm sản phẩm -->
+    <div class="search-bar">
+      <input type="text" id="searchProduct" placeholder="Nhập tên sản phẩm...">
+      <button onclick="searchProductList()">🔍</button>
+    </div>
+
     <div id="productList"></div>
   </div>
 
@@ -76,6 +78,11 @@
   // Nhấn Enter khi đăng nhập admin
   document.getElementById("adminPassword").addEventListener("keypress", function(e){
     if(e.key === "Enter") adminLogin();
+  });
+
+  // Nhấn Enter trong ô tìm kiếm
+  document.getElementById("searchProduct").addEventListener("keypress", function(e){
+    if(e.key === "Enter") searchProductList();
   });
 </script>
 
