@@ -7,10 +7,23 @@
 </head>
 <body>
 
+  <!-- Nút đăng nhập admin góc trên -->
+  <button id="adminLoginBtn" class="admin-login-btn" onclick="showAdminLogin()">Admin 🔒</button>
+
+  <!-- Popup nhập mật khẩu admin -->
+  <div id="adminLoginPopup" class="admin-login-popup">
+    <div class="admin-login-content">
+      <span class="close-btn" onclick="closeAdminLogin()">❌</span>
+      <h3>Đăng nhập Admin</h3>
+      <input type="password" id="adminPassword" placeholder="Nhập mật khẩu">
+      <button onclick="adminLogin()">Đăng nhập</button>
+    </div>
+  </div>
+
   <!-- Bên trái: Admin panel -->
   <div class="panel left-panel">
     <h2>Quản lý sản phẩm</h2>
-    <div class="form">
+    <div class="form" id="adminForm">
       <input type="text" id="productName" placeholder="Tên sản phẩm">
       <input type="number" id="productPrice" placeholder="Giá sản phẩm">
       <button onclick="addProduct()">Thêm sản phẩm</button>
