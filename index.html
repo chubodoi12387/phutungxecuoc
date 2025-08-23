@@ -3,66 +3,81 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phụ tùng xe cuốc</title>
+  <title>Phụ Tùng Xe Cuốc</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="container">
+    <!-- Cột bên trái -->
+    <aside class="sidebar">
+      <h2>Phụ Tùng Xe Cuốc</h2>
 
-  <button id="adminLoginBtn" class="admin-login-btn" onclick="showAdminLogin()">Admin 🔒</button>
+      <!-- Biểu tượng trang trí -->
+      <div class="icons">
+        <span>🚜</span>
+        <span>⚙️</span>
+        <span>🔧</span>
+      </div>
 
-  <div id="adminLoginPopup" class="admin-login-popup">
-    <div class="admin-login-content">
-      <span class="close-btn" onclick="closeAdminLogin()">❌</span>
-      <h3>Đăng nhập Admin</h3>
-      <input type="password" id="adminPassword" placeholder="Nhập mật khẩu">
-      <button onclick="adminLogin()">Đăng nhập</button>
-    </div>
+      <!-- Nút menu -->
+      <div class="menu">
+        <button id="homeBtn">🏠 Trang chủ</button>
+        <button id="productsBtn">📦 Danh mục sản phẩm</button>
+      </div>
+
+      <!-- Tìm kiếm -->
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Tìm sản phẩm...">
+        <button id="searchBtn">🔍</button>
+        <ul id="searchSuggestions"></ul>
+      </div>
+
+      <!-- Tổng doanh thu -->
+      <div class="revenue">
+        <h3>💰 Doanh thu: <span id="totalRevenue">0</span> VNĐ</h3>
+      </div>
+
+      <!-- Đăng nhập Admin -->
+      <div class="login-box">
+        <input type="password" id="adminPassword" placeholder="Mật khẩu admin">
+        <button id="loginBtn">🔑 Đăng nhập</button>
+        <p id="loginStatus"></p>
+      </div>
+    </aside>
+
+    <!-- Cột bên phải -->
+    <main class="main-content">
+      <!-- Trang chủ -->
+      <section id="homeSection">
+        <h1>Chào mừng đến với cửa hàng phụ tùng xe cuốc 🚜</h1>
+        <p>Vui lòng chọn “Danh mục sản phẩm” để xem chi tiết.</p>
+      </section>
+
+      <!-- Danh sách sản phẩm -->
+      <section id="productsSection" class="hidden">
+        <h2>Danh sách sản phẩm</h2>
+        <div id="productList" class="product-grid"></div>
+      </section>
+
+      <!-- Giỏ hàng -->
+      <section id="cartSection">
+        <h2>🛒 Giỏ hàng</h2>
+        <ul id="cartItems"></ul>
+        <p><strong>Tổng: <span id="cartTotal">0</span> VNĐ</strong></p>
+        <button id="clearCartBtn">🗑 Xóa giỏ hàng</button>
+      </section>
+
+      <!-- Quản lý sản phẩm (Admin) -->
+      <section id="adminSection" class="hidden">
+        <h2>Thêm sản phẩm mới</h2>
+        <input type="text" id="productName" placeholder="Tên sản phẩm">
+        <input type="number" id="productPrice" placeholder="Giá sản phẩm">
+        <button id="addProductBtn">➕ Thêm sản phẩm</button>
+        <ul id="adminProductList"></ul>
+      </section>
+    </main>
   </div>
 
-  <div class="panel left-panel">
-    <h2>⚙️ Quản lý sản phẩm 🏗️</h2>
-    <div class="nav-buttons">
-      <button onclick="showHome()">🏠 Trang chủ</button>
-      <button onclick="showProductList()">📋 Danh mục sản phẩm</button>
-    </div>
-    <div class="form" id="adminForm">
-      <input type="text" id="productName" placeholder="Tên sản phẩm 📝">
-      <input type="number" id="productPrice" placeholder="Giá sản phẩm 💰">
-      <button onclick="addProduct()">➕ Thêm sản phẩm</button>
-    </div>
-    <h3>📊 Thống kê</h3>
-    <p>🛠️ Tổng sản phẩm: <span id="totalProducts">0</span></p>
-    <p>💵 Doanh thu: <span id="totalRevenue">0</span> đ</p>
-    <button class="show-cart-btn" onclick="toggleCart()">🛒 Giỏ hàng</button>
-  </div>
-
-  <div class="panel middle-panel">
-    <h2>Danh sách sản phẩm</h2>
-    <div class="search-bar">
-      <input type="text" id="searchProduct" placeholder="Nhập tên sản phẩm...">
-      <button onclick="searchProductList()">🔍</button>
-    </div>
-    <div id="productList" class="products"></div>
-  </div>
-
-  <div id="cartOverlay" class="cart-overlay">
-    <div class="cart-content">
-      <span class="close-btn" onclick="toggleCart()">❌</span>
-      <h2>Giỏ hàng</h2>
-      <ul id="cartItems"></ul>
-      <p><b>Tổng:</b> <span id="totalPrice">0</span> đ</p>
-    </div>
-  </div>
-
-  <div id="toast" class="toast"></div>
-
-<script src="script.js"></script>
-<script>
-  document.getElementById("productName").addEventListener("keypress", e => e.key === "Enter" && addProduct());
-  document.getElementById("productPrice").addEventListener("keypress", e => e.key === "Enter" && addProduct());
-  document.getElementById("adminPassword").addEventListener("keypress", e => e.key === "Enter" && adminLogin());
-  document.getElementById("searchProduct").addEventListener("keypress", e => e.key === "Enter" && searchProductList());
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
