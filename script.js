@@ -37,7 +37,7 @@ function addProduct() {
   const name = document.getElementById("productName").value.trim();
   const price = parseInt(document.getElementById("productPrice").value);
   const desc = document.getElementById("productDesc").value.trim();
-  if(!name || !price) { alert("Vui lòng nhập tên và giá!"); return; }
+  if(!name || isNaN(price) || price <= 0) { alert("Vui lòng nhập tên và giá hợp lệ!"); return; }
   products.push({ name, price, desc });
   document.getElementById("productName").value = "";
   document.getElementById("productPrice").value = "";
@@ -48,7 +48,7 @@ function addProduct() {
   showToast("Đã thêm sản phẩm thành công!");
 }
 
-// Render products (có thể lọc)
+// Render products
 function renderProducts(keyword="") {
   const list = document.getElementById("productList");
   list.innerHTML = "";
@@ -57,13 +57,17 @@ function renderProducts(keyword="") {
   filtered.forEach((p, i) => {
     const div = document.createElement("div");
     div.className = "product-card";
-    let actionsHTML = `<input type="number" id="qty${i}" value="1" min="1">
-                       <button class="add-cart" onclick="addToCart(${i})">🛒</button>`;
+
+    let actionsHTML = `
+      <input type="number" id="qty${i}" value="1" min="1" style="width:60px; padding:4px; border-radius:4px; border:1px solid #ccc;">
+      <button class="add-cart" onclick="addToCart(${i})">🛒</button>
+    `;
     if(isAdmin){ actionsHTML += `<button class="delete" onclick="deleteProduct(${i})">❌</button>`; }
+
     div.innerHTML = `
       <div class="product-info">
         <span><b>${p.name}</b></span>
-        <span>${p.price} đ</span>
+        <span>${p.price.toLocaleString()} đ</span>
         <small>${p.desc || ""}</small>
       </div>
       <div class="product-actions">
@@ -93,13 +97,18 @@ function saveData() {
 
 // Add to cart
 function addToCart(index){
-  const qty = parseInt(document.getElementById(`qty${index}`).value);
+  const qtyInput = document.getElementById(`qty${index}`);
+  let qty = parseInt(qtyInput.value);
+  if(isNaN(qty) || qty <= 0) qty = 1;
+  qtyInput.value = qty;
+
   const product = products[index];
   const cartItem = cart.find(c => c.name === product.name);
   if(cartItem) cartItem.qty += qty;
   else cart.push({ name: product.name, price: product.price, qty });
   saveData();
   renderCart();
+  updateStats();
   showToast("Đã thêm vào giỏ hàng!");
 }
 
@@ -111,11 +120,11 @@ function renderCart() {
   cart.forEach((c,i)=>{
     total += c.price * c.qty;
     let li = document.createElement("li");
-    li.innerHTML = `${c.name} - ${c.price} đ x ${c.qty} 
+    li.innerHTML = `${c.name} - ${c.price.toLocaleString()} đ x ${c.qty} 
       <button class="cart-item-delete" onclick="deleteCartItem(${i})">❌</button>`;
     ul.appendChild(li);
   });
-  document.getElementById("totalPrice").textContent = total;
+  document.getElementById("totalPrice").textContent = total.toLocaleString();
 }
 
 // Delete cart item
@@ -124,6 +133,7 @@ function deleteCartItem(index){
     cart.splice(index,1);
     saveData();
     renderCart();
+    updateStats();
     showToast("Đã xóa sản phẩm khỏi giỏ hàng!");
   }
 }
@@ -138,7 +148,7 @@ function toggleCart(){
 function updateStats(){
   document.getElementById("totalProducts").textContent = products.length;
   let totalRevenue = cart.reduce((sum, c) => sum + c.price * c.qty, 0);
-  document.getElementById("totalRevenue").textContent = totalRevenue;
+  document.getElementById("totalRevenue").textContent = totalRevenue.toLocaleString();
 }
 
 // Search products
