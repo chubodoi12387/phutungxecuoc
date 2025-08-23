@@ -112,42 +112,4 @@ function renderCart() {
   cart.forEach((item, idx) => {
     total += item.price * item.qty;
     const li = document.createElement("li");
-    li.innerHTML = `${item.name} x ${item.qty} = ${item.price*item.qty} đ 
-      <button class="cart-item-delete" onclick="deleteCartItem(${idx})">❌</button>`;
-    cartList.appendChild(li);
-  });
-  document.getElementById("totalPrice").textContent = total;
-}
-
-// Delete item from cart
-function deleteCartItem(index) {
-  if(confirm("Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?")) {
-    cart.splice(index,1);
-    saveData();
-    renderCart();
-    updateStats();
-  }
-}
-
-// Update stats
-function updateStats() {
-  document.getElementById("totalProducts").textContent = products.length;
-  const totalRev = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  document.getElementById("totalRevenue").textContent = totalRev;
-}
-
-// Save localStorage
-function saveData() {
-  localStorage.setItem("products", JSON.stringify(products));
-  localStorage.setItem("cart", JSON.stringify(cart));
-}
-
-// Toggle cart overlay
-function toggleCart() {
-  const overlay = document.getElementById("cartOverlay");
-  if(overlay.style.display === "flex") overlay.style.display = "none";
-  else {
-    overlay.style.display = "flex";
-    renderCart();
-  }
-}
+    li.innerHTML = `${item.name} x ${
