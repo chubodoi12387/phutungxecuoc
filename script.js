@@ -1,11 +1,11 @@
-// ==== Firebase setup ====
 const firebaseConfig = {
-  apiKey: "API_KEY",
-  authDomain: "PROJECT_ID.firebaseapp.com",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT_ID.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
+  apiKey: "AIzaSyAeCt8rpatQv2ZHAbBwY3QC1W4o_qekTag",
+  authDomain: "projectmananger-2dc9f.firebaseapp.com",
+  projectId: "projectmananger-2dc9f",
+  storageBucket: "projectmananger-2dc9f.firebasestorage.app",
+  messagingSenderId: "77995469141",
+  appId: "1:77995469141:web:fd4239a48d3ff9897ce7dc",
+  measurementId: "G-8JBLPVKDYT"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
@@ -186,3 +186,4 @@ function searchProductList() {
 const productPanel = document.getElementById("productList").parentElement;
 function showHome() { productPanel.style.display = "none"; }
 function showProductList() { productPanel.style.display = "block"; renderProducts(); }
+
