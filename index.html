@@ -12,18 +12,24 @@
     </header>
     <div class="container">
         <div class="left-panel">
-            <h2>Admin</h2>
-            <button onclick="addProduct()">Thêm sản phẩm</button>
-            <h3>Thống kê</h3>
-            <div id="stats">
-                <p>Tổng sản phẩm: <span id="total">0</span></p>
-            </div>
-        </div>
-        <div class="right-panel">
-            <h2>Danh sách sản phẩm</h2>
-            <div id="product-list"></div>
-        </div>
+    <h2>Admin</h2>
+    <button onclick="addProduct()">Thêm sản phẩm</button>
+
+    <h3>Thống kê</h3>
+    <div id="stats">
+        <p>Tổng sản phẩm: <span id="total">0</span></p>
+    </div>
+
+    <h3>Giỏ hàng</h3>
+    <div id="cart">
+        <p>Không có sản phẩm</p>
+        <ul id="cart-list"></ul>
+        <p>Tổng: <span id="cart-total">0</span> VND</p>
+    </div>
+</div>
+
     </div>
     <script src="script.js"></script>
 </body>
 </html>
+
