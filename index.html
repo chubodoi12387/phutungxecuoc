@@ -7,11 +7,11 @@
 </head>
 <body>
 
-  <!-- Bên trái: Admin + thống kê + giỏ hàng -->
+  <!-- Bên trái: Admin panel -->
   <div class="panel left-panel" id="adminPanel">
     <h2>Quản lý sản phẩm</h2>
     <div class="form">
-      <input type="password" id="adminPass" placeholder="Nhập mật khẩu admin">
+      <input type="password" id="adminPass" placeholder="Mật khẩu admin">
       <input type="text" id="productName" placeholder="Tên sản phẩm">
       <input type="number" id="productPrice" placeholder="Giá sản phẩm">
       <button onclick="addProduct()">Thêm sản phẩm</button>
@@ -20,24 +20,19 @@
     <h3>Thống kê</h3>
     <p>Tổng sản phẩm: <span id="totalProducts">0</span></p>
     <p>Tổng doanh thu: <span id="totalRevenue">0</span> đ</p>
-
-    <h3>Giỏ hàng</h3>
-    <div id="cart">
-      <ul id="cartItems"></ul>
-      <p>Tổng: <span id="totalPrice">0</span> đ</p>
-    </div>
   </div>
 
-  <!-- Bên giữa: danh sách sản phẩm -->
+  <!-- Bên giữa: Danh sách sản phẩm -->
   <div class="panel middle-panel">
     <h2>Danh sách sản phẩm</h2>
     <div id="productList"></div>
   </div>
 
-  <!-- Bên phải: (dành cho khách, có thể hiển thị thêm thông tin khác) -->
+  <!-- Bên phải: Giỏ hàng -->
   <div class="panel right-panel">
-    <h2>Thông tin khác</h2>
-    <p>Bên phải để trống, có thể hiển thị thông tin cảm biến hoặc quảng cáo.</p>
+    <h2>Giỏ hàng</h2>
+    <ul id="cartItems"></ul>
+    <p><b>Tổng:</b> <span id="totalPrice">0</span> đ</p>
   </div>
 
 <script src="script.js"></script>
