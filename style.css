@@ -137,3 +137,22 @@ h3 { margin-top: 20px; color: #333; }
   font-weight: bold;
 }
 .cart-item-delete:hover { background: #a71d2a; }
+
+/* Toast thông báo */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #28a745;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+  z-index: 2000;
+}
+.toast.show {
+  opacity: 1;
+}
