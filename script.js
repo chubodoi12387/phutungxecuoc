@@ -246,14 +246,13 @@ async function fetchWeather() {
         
         const weatherCode = data.current.weather_code;
         const temperature = data.current.temperature_2m;
-        const isDay = data.current.is_day;
         
         const weatherText = getWeatherText(weatherCode);
-        const iconUrl = getWeatherIcon(weatherCode, isDay);
+        const emoji = getWeatherEmoji(weatherCode);
         
         document.getElementById('weather').innerHTML = `
-            <img src="${iconUrl}" alt="${weatherText}">
-            <span>${temperature}°C</span>
+            <span>${emoji} ${temperature}°C</span>
+            <small>${weatherText}</small>
         `;
     } catch (error) {
         console.error("Lỗi khi lấy thời tiết:", error);
@@ -276,60 +275,46 @@ function getWeatherText(code) {
     return descriptions[code] || 'Không xác định';
 }
 
-function getWeatherIcon(code, isDay) {
-    let iconUrl = '';
-    const day = isDay ? 'day' : 'night';
+function getWeatherEmoji(code) {
     switch (code) {
         case 0:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/clear.png`;
-            break;
+            return '☀️'; // Clear sky
         case 1:
         case 2:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/cloudy.png`;
-            break;
+            return '⛅'; // Mostly clear / partly cloudy
         case 3:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/overcast.png`;
-            break;
+            return '☁️'; // Overcast
         case 45:
         case 48:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/fog.png`;
-            break;
+            return '🌫️'; // Fog
         case 51:
         case 53:
         case 55:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/rainy.png`;
-            break;
+            return '🌧️'; // Drizzle
         case 61:
         case 63:
         case 65:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/rainy.png`;
-            break;
+            return '🌦️'; // Rain
         case 66:
         case 67:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/sleet.png`;
-            break;
+            return '🌨️'; // Freezing rain
         case 71:
         case 73:
         case 75:
         case 77:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/snowy.png`;
-            break;
+            return '❄️'; // Snow
         case 80:
         case 81:
         case 82:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/rainy-thunder.png`;
-            break;
+            return '🌧️'; // Showers
         case 85:
         case 86:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/snowy-sleet.png`;
-            break;
+            return '🌨️'; // Snow showers
         case 95:
         case 96:
         case 99:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/thunderstorm.png`;
-            break;
+            return '⛈️'; // Thunderstorm
         default:
-            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/clear.png`;
+            return '❓'; // Unknown
     }
-    return iconUrl;
 }
