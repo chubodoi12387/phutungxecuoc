@@ -164,6 +164,21 @@ button.cart-item-delete {
     margin-top: 15px;
 }
 
+.cart-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.cart-buttons button {
+    width: 48%;
+}
+
+#paymentInfo p {
+    font-size: 1.1em;
+    line-height: 1.5;
+}
+
 #cartItems li {
     padding: 8px 0;
     border-bottom: 1px solid #eee;
