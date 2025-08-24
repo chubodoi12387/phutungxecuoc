@@ -1,77 +1,68 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Quản lý sản phẩm</title>
-  <link rel="stylesheet" href="style.css">
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <meta charset="UTF-8">
+    <title>Quản lý sản phẩm</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Quản lý sản phẩm</h1>
-    <nav>
-      <button onclick="showHome()">🏠 Trang chủ</button>
-      <button onclick="showProductList()">📦 Danh sách sản phẩm</button>
-      <button onclick="toggleCart()">🛒 Giỏ hàng</button>
-      <button onclick="showAdminLogin()">🔑 Admin</button>
-    </nav>
-  </header>
+    <header>
+        <h1>Quản lý sản phẩm</h1>
+        <nav>
+            <button onclick="showHome()">🏠 Trang chủ</button>
+            <button onclick="showProductList()">📦 Danh sách sản phẩm</button>
+            <button onclick="toggleCart()">🛒 Giỏ hàng</button>
+            <button onclick="showAdminLogin()" class="admin-btn">🔑 Admin</button>
+        </nav>
+    </header>
 
-  <main>
-    <!-- Thống kê -->
-    <section class="stats card">
-      <p>📊 Tổng số sản phẩm: <span id="totalProducts">0</span></p>
-      <p>💰 Doanh thu tạm tính: <span id="totalRevenue">0</span> đ</p>
-    </section>
+    <main>
+        <section class="stats card">
+            <p>📊 Tổng số sản phẩm: <span id="totalProducts">0</span></p>
+            <p>💰 Doanh thu tạm tính: <span id="totalRevenue">0</span> đ</p>
+        </section>
 
-    <!-- Thêm sản phẩm (chỉ admin) -->
-    <section class="add-product card">
-      <h2>➕ Thêm sản phẩm</h2>
-      <input type="text" id="productName" placeholder="Tên sản phẩm">
-      <input type="number" id="productPrice" placeholder="Giá sản phẩm">
-      <textarea id="productDesc" placeholder="Mô tả sản phẩm"></textarea>
-      <button onclick="addProduct()">Thêm</button>
-    </section>
+        <section class="add-product card">
+            <h2>➕ Thêm sản phẩm</h2>
+            <input type="text" id="productName" placeholder="Tên sản phẩm">
+            <input type="number" id="productPrice" placeholder="Giá sản phẩm">
+            <textarea id="productDesc" placeholder="Mô tả sản phẩm"></textarea>
+            <button onclick="addProduct()">Thêm</button>
+        </section>
 
-    <!-- Tìm kiếm -->
-    <section class="search">
-      <input type="text" id="searchProduct" placeholder="🔍 Tìm kiếm sản phẩm..." oninput="searchProductList()">
-    </section>
+        <section class="search">
+            <input type="text" id="searchProduct" placeholder="🔍 Tìm kiếm sản phẩm...">
+        </section>
 
-    <!-- Danh sách sản phẩm -->
-    <section class="products">
-      <div id="productList" class="product-grid">
-        <!-- Sản phẩm sẽ hiển thị ở đây -->
-      </div>
-    </section>
-  </main>
+        <section class="products">
+            <div id="productList" class="product-grid">
+                </div>
+        </section>
+    </main>
 
-  <!-- Popup giỏ hàng -->
-  <div id="cartOverlay" class="overlay">
-    <div class="cart card">
-      <h2>🛒 Giỏ hàng</h2>
-      <ul id="cartItems"></ul>
-      <p><b>Tổng cộng:</b> <span id="totalPrice">0</span> đ</p>
-      <button onclick="toggleCart()">Đóng</button>
+    <div id="cartOverlay" class="overlay">
+        <div class="cart card">
+            <h2>🛒 Giỏ hàng</h2>
+            <ul id="cartItems"></ul>
+            <p><b>Tổng cộng:</b> <span id="totalPrice">0</span> đ</p>
+            <button onclick="toggleCart()">Đóng</button>
+        </div>
     </div>
-  </div>
 
-  <!-- Popup admin login -->
-  <div id="adminLoginPopup" class="overlay">
-    <div class="popup card">
-      <h2>🔑 Đăng nhập Admin</h2>
-      <input type="password" id="adminPassword" placeholder="Nhập mật khẩu">
-      <button onclick="adminLogin()">Đăng nhập</button>
-      <button onclick="closeAdminLogin()">Đóng</button>
+    <div id="adminLoginPopup" class="overlay">
+        <div class="popup card">
+            <h2>🔑 Đăng nhập Admin</h2>
+            <input type="password" id="adminPassword" placeholder="Nhập mật khẩu">
+            <button onclick="adminLogin()">Đăng nhập</button>
+            <button onclick="closeAdminLogin()">Đóng</button>
+        </div>
     </div>
-  </div>
 
-  <!-- Toast -->
-  <div id="toast"></div>
+    <div id="toast"></div>
 
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
