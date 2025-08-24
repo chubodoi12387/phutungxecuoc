@@ -1,30 +1,196 @@
-body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
-header { background: #333; color: white; padding: 10px; text-align: center; }
-nav button { margin: 5px; padding: 5px 10px; cursor: pointer; border-radius:4px; border:none; background:#555; color:#fff; }
-nav button:hover { background:#777; }
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #333;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --card-bg: #fff;
+    --border-radius: 5px;
+    --box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
 
-.stats, .add-product, .search, .products { margin: 20px; }
-.add-product input, .add-product textarea { display: block; margin: 5px 0; padding: 8px; width: 250px; border-radius:4px; border:1px solid #ccc; }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
 
-.product-card { border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin: 10px 0; display: flex; justify-content: space-between; align-items: center; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-.product-info { display: flex; flex-direction: column; }
-.product-info span { margin: 2px 0; }
-.product-actions { display: flex; gap: 5px; }
+header {
+    background: var(--secondary-color);
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
 
-button.add-cart { background: green; color: white; border: none; padding: 5px; border-radius: 3px; cursor:pointer; }
-button.delete { background: red; color: white; border: none; padding: 5px; border-radius: 3px; cursor:pointer; }
-button.cart-item-delete { background: red; color: white; border: none; padding: 2px 5px; margin-left: 10px; cursor: pointer; }
+nav button {
+    margin: 5px;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+    border: none;
+    background: #555;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
 
-.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
-.overlay .cart, .overlay .popup { background: white; padding: 20px; border-radius: 5px; max-width: 400px; width:90%; }
+nav button:hover { background: #777; }
 
-#toast { visibility: hidden; min-width: 200px; margin-left: -100px; background: #333; color: #fff; text-align: center; border-radius: 5px; padding: 10px; position: fixed; bottom: 30px; left: 50%; z-index: 1; }
-#toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 1.5s; }
+.stats, .add-product, .search, .products {
+    margin: 20px;
+}
 
-@keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-@keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+.add-product {
+    display: none; /* Mặc định ẩn, chỉ hiện khi admin đăng nhập */
+}
 
-@media(max-width:600px){
-  .product-card { flex-direction: column; align-items:flex-start; }
-  .product-actions { margin-top:5px; }
+.add-product input, .add-product textarea {
+    display: block;
+    margin: 5px 0;
+    padding: 10px;
+    width: 250px;
+    border-radius: var(--border-radius);
+    border: 1px solid #ccc;
+}
+
+.product-card {
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+}
+.product-info h4 { margin: 0; font-size: 1.2em; }
+.product-info .product-price { color: var(--primary-color); font-weight: bold; margin: 5px 0; }
+.product-info .product-desc { font-style: italic; color: #666; font-size: 0.9em; }
+
+.product-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+.product-actions input { width: 50px; padding: 5px; border-radius: var(--border-radius); border: 1px solid #ccc; }
+
+button.add-cart {
+    background: var(--success-color);
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+button.add-cart:hover { background: #218838; }
+
+button.delete {
+    background: var(--error-color);
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+button.delete:hover { background: #c82333; }
+
+button.cart-item-delete {
+    background: var(--error-color);
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: var(--border-radius);
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.overlay.show-flex { display: flex; }
+
+.overlay .cart, .overlay .popup {
+    background: var(--card-bg);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    max-width: 450px;
+    width: 90%;
+    box-shadow: var(--box-shadow);
+    animation: fadeInPopup 0.3s ease-out;
+}
+
+#cartItems li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#cartItems li:last-child {
+    border-bottom: none;
+}
+#totalPrice {
+    font-size: 1.2em;
+}
+
+#toast {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    color: #fff;
+    text-align: center;
+    border-radius: var(--border-radius);
+    padding: 10px 20px;
+    position: fixed;
+    z-index: 99;
+    bottom: 30px;
+    left: 50%;
+    transition: visibility 0s, opacity 0.5s ease-in-out;
+}
+
+#toast.show { visibility: visible; }
+#toast.success { background-color: var(--success-color); }
+#toast.error { background-color: var(--error-color); }
+
+@keyframes fadeInPopup {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 600px) {
+    .product-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .product-info h4 { font-size: 1.1em; }
+    .product-actions {
+        margin-top: 10px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .add-product input, .add-product textarea {
+        width: 100%;
+    }
 }
