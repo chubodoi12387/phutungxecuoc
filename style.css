@@ -35,11 +35,11 @@ nav button {
 
 nav button:hover { background: #777; }
 
-.stats, .add-product, .search, .products {
+.stats, .add-product, .search, .products, #orders-section {
     margin: 20px;
 }
 
-.add-product {
+.add-product, #orders-section {
     display: none; /* Mặc định ẩn, chỉ hiện khi admin đăng nhập */
 }
 
@@ -192,6 +192,52 @@ button.cart-item-delete {
 #totalPrice {
     font-size: 1.2em;
 }
+
+/* New CSS for Orders Section */
+.order-card {
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius);
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+    box-shadow: var(--box-shadow);
+    transition: all 0.2s ease;
+}
+.order-card:hover {
+    background-color: #f1f1f1;
+}
+.order-card h4 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+.order-card .status {
+    font-weight: bold;
+    color: #007bff;
+}
+.order-card .status.confirmed {
+    color: var(--success-color);
+}
+.order-card ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-top: 10px;
+}
+.order-card li {
+    margin-bottom: 5px;
+}
+.confirm-btn {
+    background: var(--success-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    margin-top: 10px;
+}
+.confirm-btn:hover {
+    background: #218838;
+}
+
 
 #footer-info {
     position: fixed;
