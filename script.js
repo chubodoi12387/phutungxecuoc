@@ -55,21 +55,41 @@ function showToast(message, type = 'success') {
 }
 
 // ==== ADMIN LOGIN ====
-function showAdminLogin() { document.getElementById("adminLoginPopup").style.display = "flex"; }
-function closeAdminLogin() { document.getElementById("adminLoginPopup").style.display = "none"; }
+function showAdminPanel() { 
+    document.getElementById("adminLoginPopup").style.display = "flex"; 
+}
+function closeAdminLogin() { 
+    document.getElementById("adminLoginPopup").style.display = "none"; 
+}
 function adminLogin() {
     const pwd = document.getElementById("adminPassword").value;
     if (pwd === ADMIN_PASSWORD) {
         isAdmin = true;
         closeAdminLogin();
-        document.querySelector('.add-product').style.display = 'block';
         document.querySelector('nav .admin-btn').textContent = '🚪 Admin (Đã Đăng Nhập)';
         showToast("Đăng nhập admin thành công!");
-        renderProducts();
+        showAdminDashboard();
+        listenForNewOrders(); // Bắt đầu lắng nghe đơn hàng
     } else {
         showToast("Mật khẩu sai!", "error");
     }
 }
+
+function showAdminDashboard() {
+    hideAllSections();
+    document.querySelector('.stats').style.display = 'block';
+    document.querySelector('.add-product').style.display = 'block';
+    document.getElementById('orders-section').style.display = 'block';
+}
+
+function hideAllSections() {
+    document.querySelector('.stats').style.display = 'none';
+    document.querySelector('.add-product').style.display = 'none';
+    document.querySelector('.products').style.display = 'none';
+    document.querySelector('.search').style.display = 'none';
+    document.getElementById('orders-section').style.display = 'none';
+}
+
 
 // ==== THÊM SẢN PHẨM ====
 async function addProduct() {
@@ -322,6 +342,74 @@ async function confirmPayment() {
     });
 }
 
+// ==== QUẢN LÝ ĐƠN HÀNG (Dành cho Admin) ====
+function listenForNewOrders() {
+    if (!isAdmin) return;
+    db.collection("orders").orderBy("createdAt", "desc").onSnapshot(snapshot => {
+        snapshot.docChanges().forEach(change => {
+            if (change.type === "added") {
+                const newOrder = change.doc.data();
+                if (newOrder.status === 'Chờ xác nhận') {
+                    // Hiển thị thông báo khi có đơn hàng mới
+                    Swal.fire({
+                        title: "Đơn hàng mới!",
+                        text: `Có đơn hàng mới với mã ${newOrder.orderCode} cần xác nhận.`,
+                        icon: "info",
+                        timer: 5000,
+                        timerProgressBar: true
+                    });
+                }
+            }
+        });
+        renderOrders(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
+}
+
+function renderOrders(orders) {
+    const list = document.getElementById("ordersList");
+    list.innerHTML = "";
+    if (orders.length === 0) {
+        list.innerHTML = "<p>Chưa có đơn hàng nào.</p>";
+        return;
+    }
+
+    orders.forEach(order => {
+        const orderDiv = document.createElement("div");
+        orderDiv.className = "order-card";
+        const itemsHtml = order.items.map(item => `<li>${item.name} x ${item.qty}</li>`).join('');
+        const statusClass = order.status === 'Đã xác nhận' ? 'confirmed' : '';
+
+        orderDiv.innerHTML = `
+            <h4>Mã ĐH: ${order.orderCode}</h4>
+            <p>Tổng tiền: <b>${order.total.toLocaleString()} đ</b></p>
+            <p>Trạng thái: <span class="status ${statusClass}">${order.status}</span></p>
+            <p>Sản phẩm:</p>
+            <ul>${itemsHtml}</ul>
+            <p>Thời gian: ${order.createdAt ? new Date(order.createdAt.seconds * 1000).toLocaleString('vi-VN') : 'N/A'}</p>
+            ${order.status === 'Chờ xác nhận' ? `<button class="confirm-btn" onclick="confirmOrder('${order.id}')">Xác nhận</button>` : ''}
+        `;
+        list.appendChild(orderDiv);
+    });
+}
+
+async function confirmOrder(orderId) {
+    const result = await Swal.fire({
+        title: "Xác nhận đơn hàng?",
+        text: "Đơn hàng này sẽ được chuyển sang trạng thái Đã xác nhận.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#28a745",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Hủy"
+    });
+
+    if (result.isConfirmed) {
+        await db.collection("orders").doc(orderId).update({ status: 'Đã xác nhận' });
+        showToast("Đã xác nhận đơn hàng!", "success");
+    }
+}
+
 // ==== THỐNG KÊ ====
 async function updateStats() {
     const totalProducts = allProducts.length;
@@ -338,15 +426,15 @@ function searchProductList() {
     renderProducts(keyword);
 }
 
-// ==== ẨN/HIỆN DANH SÁCH SẢN PHẨM ====
+// ==== ẨN/HIỆN CÁC PHẦN ====
 function showHome() { 
+    hideAllSections();
     document.querySelector('.stats').style.display = 'block';
     document.querySelector('.add-product').style.display = isAdmin ? 'block' : 'none';
-    document.querySelector('.products').style.display = 'none';
-    document.querySelector('.search').style.display = 'none';
 }
 
 function showProductList() { 
+    hideAllSections();
     document.querySelector('.stats').style.display = 'none';
     document.querySelector('.add-product').style.display = 'none';
     document.querySelector('.products').style.display = 'block';
