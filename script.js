@@ -76,7 +76,6 @@ async function addProduct() {
     const newProduct = { name, price, desc };
     const docRef = await db.collection("products").add(newProduct);
     
-    // Cập nhật DOM mà không tải lại toàn bộ
     allProducts.push({ id: docRef.id, ...newProduct });
     renderProducts();
 
@@ -128,7 +127,6 @@ async function deleteProduct(id) {
     if (confirm("Bạn có chắc muốn xóa sản phẩm này?")) {
         await db.collection("products").doc(id).delete();
         
-        // Cập nhật mảng sản phẩm mà không tải lại
         allProducts = allProducts.filter(p => p.id !== id);
         renderProducts();
 
@@ -279,21 +277,59 @@ function getWeatherText(code) {
 }
 
 function getWeatherIcon(code, isDay) {
-    let iconName = '';
+    let iconUrl = '';
     const day = isDay ? 'day' : 'night';
     switch (code) {
-        case 0: iconName = 'clear'; break;
-        case 1: case 2: iconName = 'cloudy'; break;
-        case 3: iconName = 'overcast'; break;
-        case 45: case 48: iconName = 'fog'; break;
-        case 51: case 53: case 55: iconName = 'rainy'; break;
-        case 61: case 63: case 65: iconName = 'rainy'; break;
-        case 66: case 67: iconName = 'sleet'; break;
-        case 71: case 73: case 75: case 77: iconName = 'snowy'; break;
-        case 80: case 81: case 82: iconName = 'rainy-thunder'; break;
-        case 85: case 86: iconName = 'snowy-sleet'; break;
-        case 95: case 96: case 99: iconName = 'thunderstorm'; break;
-        default: iconName = 'clear';
+        case 0:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/clear.png`;
+            break;
+        case 1:
+        case 2:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/cloudy.png`;
+            break;
+        case 3:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/overcast.png`;
+            break;
+        case 45:
+        case 48:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/fog.png`;
+            break;
+        case 51:
+        case 53:
+        case 55:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/rainy.png`;
+            break;
+        case 61:
+        case 63:
+        case 65:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/rainy.png`;
+            break;
+        case 66:
+        case 67:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/sleet.png`;
+            break;
+        case 71:
+        case 73:
+        case 75:
+        case 77:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/snowy.png`;
+            break;
+        case 80:
+        case 81:
+        case 82:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/rainy-thunder.png`;
+            break;
+        case 85:
+        case 86:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/snowy-sleet.png`;
+            break;
+        case 95:
+        case 96:
+        case 99:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/thunderstorm.png`;
+            break;
+        default:
+            iconUrl = `https://cdn.jsdelivr.net/npm/weather-icons@2.0.3/dist/png/${day}/clear.png`;
     }
-    return `https://cdn.jsdelivr.net/gh/manifestinteractive/weather-icons@2.0.3/dist/png/${day}/${iconName}.png`;
+    return iconUrl;
 }
