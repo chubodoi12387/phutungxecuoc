@@ -40,15 +40,21 @@ function setupEventListeners() {
     document.getElementById("searchProduct").addEventListener("input", searchProductList);
 }
 
-// ==== TOAST (Cải tiến với màu sắc) ====
+// ==== TOAST (Sử dụng SweetAlert2) ====
 function showToast(message, type = 'success') {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.className = `show ${type}`;
-    setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2000);
+    const icon = type === 'success' ? 'success' : 'error';
+    Swal.fire({
+        toast: true,
+        position: 'bottom-end',
+        icon: icon,
+        title: message,
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true
+    });
 }
 
-// ==== ADMIN LOGIN (Cải tiến UX) ====
+// ==== ADMIN LOGIN ====
 function showAdminLogin() { document.getElementById("adminLoginPopup").style.display = "flex"; }
 function closeAdminLogin() { document.getElementById("adminLoginPopup").style.display = "none"; }
 function adminLogin() {
@@ -65,7 +71,7 @@ function adminLogin() {
     }
 }
 
-// ==== THÊM SẢN PHẨM (Cải tiến) ====
+// ==== THÊM SẢN PHẨM ====
 async function addProduct() {
     if (!isAdmin) { showToast("Bạn không có quyền admin!", "error"); return; }
     const name = document.getElementById("productName").value.trim();
@@ -85,7 +91,7 @@ async function addProduct() {
     document.getElementById("productDesc").value = "";
 }
 
-// ==== HIỂN THỊ SẢN PHẨM (Cải tiến) ====
+// ==== HIỂN THỊ SẢN PHẨM ====
 async function fetchAndRenderProducts() {
     const snapshot = await db.collection("products").get();
     allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -105,7 +111,7 @@ function renderProducts(keyword = "") {
         const div = document.createElement("div");
         div.className = "product-card";
         div.innerHTML = `
-            <div class="product-info">
+            <div class="product-info" onclick="showProductDetail('${p.id}')">
                 <h4>${p.name}</h4>
                 <p class="product-price">${p.price.toLocaleString()} đ</p>
                 <small class="product-desc">${p.desc || ""}</small>
@@ -113,7 +119,7 @@ function renderProducts(keyword = "") {
             <div class="product-actions">
                 <input type="number" id="qty-${p.id}" value="1" min="1">
                 <button class="add-cart" onclick="addToCart('${p.id}', ${p.price}, '${p.name}')">🛒</button>
-                ${isAdmin ? `<button class="delete" onclick="deleteProduct('${p.id}')">❌</button>` : ''}
+                ${isAdmin ? `<button class="edit" onclick="editProduct('${p.id}')">✏️</button><button class="delete" onclick="deleteProduct('${p.id}')">❌</button>` : ''}
             </div>
         `;
         list.appendChild(div);
@@ -122,19 +128,82 @@ function renderProducts(keyword = "") {
     updateStats();
 }
 
-// ==== XÓA SẢN PHẨM (Cải tiến) ====
+// ==== SỬA SẢN PHẨM ====
+function editProduct(id) {
+    const product = allProducts.find(p => p.id === id);
+    if (!product) return;
+
+    document.getElementById('editProductId').value = product.id;
+    document.getElementById('editProductName').value = product.name;
+    document.getElementById('editProductPrice').value = product.price;
+    document.getElementById('editProductDesc').value = product.desc;
+    document.getElementById('editProductOverlay').style.display = "flex";
+}
+
+function closeEditProduct() {
+    document.getElementById('editProductOverlay').style.display = "none";
+}
+
+async function saveEditedProduct() {
+    const id = document.getElementById('editProductId').value;
+    const name = document.getElementById('editProductName').value.trim();
+    const price = parseInt(document.getElementById('editProductPrice').value);
+    const desc = document.getElementById('editProductDesc').value.trim();
+    
+    if (!name || isNaN(price) || price <= 0) {
+        showToast("Vui lòng nhập tên và giá hợp lệ!", "error");
+        return;
+    }
+
+    await db.collection("products").doc(id).update({ name, price, desc });
+    
+    const index = allProducts.findIndex(p => p.id === id);
+    if (index !== -1) {
+        allProducts[index] = { id, name, price, desc };
+    }
+    
+    renderProducts();
+    closeEditProduct();
+    showToast("Đã sửa sản phẩm thành công!");
+}
+
+// ==== XÓA SẢN PHẨM (Đã dùng SweetAlert2) ====
 async function deleteProduct(id) {
-    if (confirm("Bạn có chắc muốn xóa sản phẩm này?")) {
+    const result = await Swal.fire({
+        title: "Bạn có chắc muốn xóa?",
+        text: "Bạn sẽ không thể hoàn tác hành động này!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Hủy"
+    });
+    
+    if (result.isConfirmed) {
         await db.collection("products").doc(id).delete();
-        
         allProducts = allProducts.filter(p => p.id !== id);
         renderProducts();
-
         showToast("Đã xóa sản phẩm!");
     }
 }
 
-// ==== GIỎ HÀNG (Cải tiến) ====
+// ==== HIỂN THỊ CHI TIẾT SẢN PHẨM ====
+function showProductDetail(id) {
+    const product = allProducts.find(p => p.id === id);
+    if (!product) return;
+    
+    document.getElementById('detailName').textContent = product.name;
+    document.getElementById('detailPrice').textContent = product.price.toLocaleString();
+    document.getElementById('detailDesc').textContent = product.desc;
+    document.getElementById('productDetailOverlay').style.display = "flex";
+}
+
+function closeProductDetail() {
+    document.getElementById('productDetailOverlay').style.display = "none";
+}
+
+// ==== GIỎ HÀNG ====
 async function getCart() {
     const doc = await db.collection("carts").doc(userId).get();
     return doc.exists ? doc.data().items : [];
@@ -180,7 +249,18 @@ async function renderCart() {
 }
 
 async function deleteCartItem(index) {
-    if (confirm("Bạn có chắc muốn xóa sản phẩm trong giỏ hàng?")) {
+    const result = await Swal.fire({
+        title: "Bạn có chắc muốn xóa?",
+        text: "Sản phẩm sẽ bị xóa khỏi giỏ hàng!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#dc3545",
+        cancelButtonColor: "#6c757d",
+        confirmButtonText: "Đồng ý",
+        cancelButtonText: "Hủy"
+    });
+
+    if (result.isConfirmed) {
         let cart = await getCart();
         cart.splice(index, 1);
         await saveCart(cart);
@@ -194,7 +274,7 @@ function toggleCart() {
     overlay.classList.toggle("show-flex");
 }
 
-// ==== THỐNG KÊ (Cải tiến) ====
+// ==== THỐNG KÊ ====
 async function updateStats() {
     const totalProducts = allProducts.length;
     const cart = await getCart();
@@ -204,7 +284,7 @@ async function updateStats() {
     document.getElementById("totalRevenue").textContent = totalRevenue.toLocaleString();
 }
 
-// ==== TÌM KIẾM (Cải tiến) ====
+// ==== TÌM KIẾM ====
 function searchProductList() {
     const keyword = this.value.toLowerCase().trim();
     renderProducts(keyword);
@@ -225,7 +305,7 @@ function showProductList() {
     document.querySelector('.search').style.display = 'block';
 }
 
-// ==== CẬP NHẬT NGÀY GIỜ & THỜI TIẾT ====
+// ==== NGÀY GIỜ & THỜI TIẾT ====
 function updateDateTime() {
     const now = new Date();
     const formattedDate = now.toLocaleDateString('vi-VN', {
