@@ -17,7 +17,7 @@
             <button onclick="showHome()">🏠 Trang chủ</button>
             <button onclick="showProductList()">📦 Danh sách sản phẩm</button>
             <button onclick="toggleCart()">🛒 Giỏ hàng</button>
-            <button onclick="showAdminLogin()" class="admin-btn">🔑 Admin</button>
+            <button onclick="showAdminPanel()" class="admin-btn">🔑 Admin</button>
         </nav>
     </header>
 
@@ -43,6 +43,13 @@
             <div id="productList" class="product-grid">
                 </div>
         </section>
+
+        <section id="orders-section" class="card">
+            <h2>📜 Quản lý Đơn hàng</h2>
+            <div id="ordersList">
+                </div>
+        </section>
+
     </main>
 
     <div id="cartOverlay" class="overlay">
@@ -92,9 +99,9 @@
             <h2>💳 Thanh toán</h2>
             <div id="paymentInfo">
                 <p>Vui lòng chuyển khoản với thông tin sau:</p>
-                <p><b>Ngân hàng:</b> BIDV</p>
-                <p><b>Số tài khoản:</b> 3144085413</p>
-                <p><b>Chủ tài khoản:</b> LE DUC TOAN</p>
+                <p><b>Ngân hàng:</b> VIETCOMBANK</p>
+                <p><b>Số tài khoản:</b> 000000000000</p>
+                <p><b>Chủ tài khoản:</b> TRAN VAN A</p>
                 <p><b>Tổng tiền:</b> <span id="paymentAmount"></span> đ</p>
                 <p><b>Nội dung chuyển khoản:</b> <span id="paymentCode"></span></p>
             </div>
@@ -111,4 +118,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-
