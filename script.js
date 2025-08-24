@@ -13,9 +13,11 @@ const db = firebase.firestore();
 
 // ==== BIẾN TOÀN CỤC & TRẠNG THÁI ====
 let isAdmin = false;
-const ADMIN_PASSWORD = "123456"; // LƯU Ý: NÊN SỬ DỤNG FIREBASE AUTH CHO BẢO MẬT
+const ADMIN_PASSWORD = "123456"; 
 const userId = "demoUser"; 
-let allProducts = []; // Lưu trữ tất cả sản phẩm để tìm kiếm mà không cần tải lại
+let allProducts = []; 
+const lat = 10.7769; // Vĩ độ của Thành phố Hồ Chí Minh
+const lon = 106.7019; // Kinh độ của Thành phố Hồ Chí Minh
 
 // ==== KHỞI TẠO ====
 window.onload = function() {
@@ -28,6 +30,10 @@ async function initApp() {
     updateStats();
     showHome();
     setupEventListeners();
+    updateDateTime();
+    fetchWeather();
+    setInterval(updateDateTime, 1000); // Cập nhật ngày giờ mỗi giây
+    setInterval(fetchWeather, 900000); // Cập nhật thời tiết mỗi 15 phút (900000 ms)
 }
 
 function setupEventListeners() {
@@ -219,4 +225,75 @@ function showProductList() {
     document.querySelector('.add-product').style.display = 'none';
     document.querySelector('.products').style.display = 'block';
     document.querySelector('.search').style.display = 'block';
+}
+
+// ==== CẬP NHẬT NGÀY GIỜ & THỜI TIẾT ====
+function updateDateTime() {
+    const now = new Date();
+    const formattedDate = now.toLocaleDateString('vi-VN', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+    const formattedTime = now.toLocaleTimeString('vi-VN', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+    document.getElementById('datetime').textContent = `${formattedDate} ${formattedTime}`;
+}
+
+async function fetchWeather() {
+    const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,is_day&timezone=auto`;
+    try {
+        const response = await fetch(weatherUrl);
+        if (!response.ok) throw new Error("Không thể lấy dữ liệu thời tiết");
+        const data = await response.json();
+        
+        const weatherCode = data.current.weather_code;
+        const temperature = data.current.temperature_2m;
+        const isDay = data.current.is_day;
+        
+        const weatherText = getWeatherText(weatherCode);
+        const iconUrl = getWeatherIcon(weatherCode, isDay);
+        
+        document.getElementById('weather').innerHTML = `
+            <img src="${iconUrl}" alt="${weatherText}">
+            <span>${temperature}°C</span>
+        `;
+    } catch (error) {
+        console.error("Lỗi khi lấy thời tiết:", error);
+        document.getElementById('weather').innerHTML = `<span>Lỗi thời tiết</span>`;
+    }
+}
+
+function getWeatherText(code) {
+    const descriptions = {
+        0: 'Trời quang đãng', 1: 'Chủ yếu trong xanh', 2: 'Có mây rải rác', 3: 'Trời nhiều mây',
+        45: 'Sương mù', 48: 'Sương mù đóng băng', 
+        51: 'Mưa phùn nhẹ', 53: 'Mưa phùn vừa', 55: 'Mưa phùn nặng',
+        61: 'Mưa nhẹ', 63: 'Mưa vừa', 65: 'Mưa nặng hạt',
+        66: 'Mưa đá nhẹ', 67: 'Mưa đá nặng', 
+        71: 'Tuyết rơi nhẹ', 73: 'Tuyết rơi vừa', 75: 'Tuyết rơi nặng',
+        77: 'Hạt tuyết', 80: 'Mưa rào nhẹ', 81: 'Mưa rào vừa', 82: 'Mưa rào nặng',
+        85: 'Mưa tuyết nhẹ', 86: 'Mưa tuyết nặng',
+        95: 'Giông bão', 96: 'Giông bão kèm mưa đá nhẹ', 99: 'Giông bão kèm mưa đá nặng'
+    };
+    return descriptions[code] || 'Không xác định';
+}
+
+function getWeatherIcon(code, isDay) {
+    let iconName = '';
+    const day = isDay ? 'day' : 'night';
+    switch (code) {
+        case 0: iconName = 'clear'; break;
+        case 1: case 2: iconName = 'cloudy'; break;
+        case 3: iconName = 'overcast'; break;
+        case 45: case 48: iconName = 'fog'; break;
+        case 51: case 53: case 55: iconName = 'rainy'; break;
+        case 61: case 63: case 65: iconName = 'rainy'; break;
+        case 66: case 67: iconName = 'sleet'; break;
+        case 71: case 73: case 75: case 77: iconName = 'snowy'; break;
+        case 80: case 81: case 82: iconName = 'rainy-thunder'; break;
+        case 85: case 86: iconName = 'snowy-sleet'; break;
+        case 95: case 96: case 99: iconName = 'thunderstorm'; break;
+        default: iconName = 'clear';
+    }
+    return `https://cdn.jsdelivr.net/gh/manifestinteractive/weather-icons@2.0.3/dist/png/${day}/${iconName}.png`;
 }
