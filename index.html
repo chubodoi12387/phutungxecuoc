@@ -50,7 +50,10 @@
             <h2>🛒 Giỏ hàng</h2>
             <ul id="cartItems"></ul>
             <p><b>Tổng cộng:</b> <span id="totalPrice">0</span> đ</p>
-            <button onclick="toggleCart()">Đóng</button>
+            <div class="cart-buttons">
+                <button onclick="toggleCart()">Đóng</button>
+                <button onclick="showPaymentPopup()">Thanh toán</button>
+            </div>
         </div>
     </div>
 
@@ -81,6 +84,22 @@
             <textarea id="editProductDesc" placeholder="Mô tả sản phẩm"></textarea>
             <button onclick="saveEditedProduct()">Lưu</button>
             <button onclick="closeEditProduct()">Hủy</button>
+        </div>
+    </div>
+
+    <div id="paymentOverlay" class="overlay">
+        <div class="popup card">
+            <h2>💳 Thanh toán</h2>
+            <div id="paymentInfo">
+                <p>Vui lòng chuyển khoản với thông tin sau:</p>
+                <p><b>Ngân hàng:</b> VIETCOMBANK</p>
+                <p><b>Số tài khoản:</b> 000000000000</p>
+                <p><b>Chủ tài khoản:</b> TRAN VAN A</p>
+                <p><b>Tổng tiền:</b> <span id="paymentAmount"></span> đ</p>
+                <p><b>Nội dung chuyển khoản:</b> <span id="paymentCode"></span></p>
+            </div>
+            <button onclick="confirmPayment()">Đã chuyển khoản</button>
+            <button onclick="closePaymentPopup()">Hủy</button>
         </div>
     </div>
 
