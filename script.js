@@ -155,7 +155,8 @@ async function saveEditedProduct() {
         return;
     }
 
-    await db.collection("products").doc(id).update({ name, price, desc });
+    const updateData = { name, price, desc };
+    await db.collection("products").doc(id).update(updateData);
     
     const index = allProducts.findIndex(p => p.id === id);
     if (index !== -1) {
@@ -272,6 +273,53 @@ async function deleteCartItem(index) {
 function toggleCart() {
     const overlay = document.getElementById("cartOverlay");
     overlay.classList.toggle("show-flex");
+}
+
+// ==== THANH TOÁN ====
+async function showPaymentPopup() {
+    const cart = await getCart();
+    if (cart.length === 0) {
+        showToast("Giỏ hàng của bạn đang trống!", "error");
+        return;
+    }
+
+    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    const orderCode = 'DH-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
+    document.getElementById('paymentAmount').textContent = total.toLocaleString();
+    document.getElementById('paymentCode').textContent = orderCode;
+    document.getElementById('paymentOverlay').style.display = "flex";
+}
+
+function closePaymentPopup() {
+    document.getElementById('paymentOverlay').style.display = "none";
+}
+
+async function confirmPayment() {
+    const cart = await getCart();
+    const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    const orderCode = document.getElementById('paymentCode').textContent;
+
+    const orderData = {
+        userId: userId,
+        items: cart,
+        total: total,
+        orderCode: orderCode,
+        status: 'Chờ xác nhận',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    
+    await db.collection("orders").add(orderData);
+    await saveCart([]); // Xóa giỏ hàng sau khi tạo đơn
+    
+    renderCart();
+    closePaymentPopup();
+    
+    Swal.fire({
+        title: "Đơn hàng đã được tạo!",
+        html: `Vui lòng chuyển khoản với nội dung: <b>${orderCode}</b><br>Chúng tôi sẽ xác nhận sớm nhất có thể.`,
+        icon: "success"
+    });
 }
 
 // ==== THỐNG KÊ ====
