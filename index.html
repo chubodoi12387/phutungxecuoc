@@ -7,6 +7,8 @@
     
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header>
@@ -61,7 +63,26 @@
         </div>
     </div>
 
-    <div id="toast"></div>
+    <div id="productDetailOverlay" class="overlay">
+        <div class="popup card">
+            <h2 id="detailName"></h2>
+            <p><b>Giá:</b> <span id="detailPrice"></span> đ</p>
+            <p><b>Mô tả:</b> <span id="detailDesc"></span></p>
+            <button onclick="closeProductDetail()">Đóng</button>
+        </div>
+    </div>
+
+    <div id="editProductOverlay" class="overlay">
+        <div class="popup card">
+            <h2>✏️ Sửa sản phẩm</h2>
+            <input type="hidden" id="editProductId">
+            <input type="text" id="editProductName" placeholder="Tên sản phẩm">
+            <input type="number" id="editProductPrice" placeholder="Giá sản phẩm">
+            <textarea id="editProductDesc" placeholder="Mô tả sản phẩm"></textarea>
+            <button onclick="saveEditedProduct()">Lưu</button>
+            <button onclick="closeEditProduct()">Hủy</button>
+        </div>
+    </div>
 
     <div id="footer-info">
         <div id="datetime"></div>
