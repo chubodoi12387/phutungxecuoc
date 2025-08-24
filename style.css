@@ -174,41 +174,40 @@ button.cart-item-delete {
 #toast.success { background-color: var(--success-color); }
 #toast.error { background-color: var(--error-color); }
 
-/* Giao diện thời tiết và ngày giờ (Đã chỉnh sửa) /
 #footer-info {
-position: fixed;
-top: 20px;
-left: 20px;
-background: rgba(255, 255, 255, 0.8); / Nền trắng trong suốt hơn /
-color: #333; / Chữ màu đen /
-padding: 10px 15px;
-border-radius: var(--border-radius);
-display: flex;
-flex-direction: column;
-gap: 5px;
-font-size: 0.9em;
-z-index: 100;
-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); / Thêm bóng đổ nhẹ */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    color: #333;
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.9em;
+    z-index: 100;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #datetime {
-font-weight: bold;
-margin-bottom: 3px; /* Thêm khoảng cách dưới ngày giờ */
+    font-weight: bold;
+    margin-bottom: 3px;
 }
 
 #weather {
-display: flex;
-align-items: center;
-gap: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 #weather img {
-width: 24px;
-height: 24px;
+    width: 24px;
+    height: 24px;
 }
 
 #weather span {
-font-weight: normal; /* Giảm độ đậm của nhiệt độ */
+    font-weight: normal; 
 }
 
 @keyframes fadeInPopup {
@@ -231,10 +230,8 @@ font-weight: normal; /* Giảm độ đậm của nhiệt độ */
         width: 100%;
     }
     #footer-info {
-        bottom: 10px;
+        top: 10px;
         left: 10px;
         padding: 8px 12px;
     }
 }
-
-
