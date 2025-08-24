@@ -43,7 +43,8 @@ nav button:hover { background: #777; }
     display: none; /* Mặc định ẩn, chỉ hiện khi admin đăng nhập */
 }
 
-.add-product input, .add-product textarea {
+.add-product input, .add-product textarea,
+.popup input, .popup textarea {
     display: block;
     margin: 5px 0;
     padding: 10px;
@@ -51,6 +52,8 @@ nav button:hover { background: #777; }
     border-radius: var(--border-radius);
     border: 1px solid #ccc;
 }
+.popup input, .popup textarea { width: calc(100% - 20px); }
+
 
 .product-card {
     border: 1px solid #ddd;
@@ -72,6 +75,7 @@ nav button:hover { background: #777; }
 .product-info {
     display: flex;
     flex-direction: column;
+    cursor: pointer; /* Thêm con trỏ để người dùng biết có thể bấm vào */
 }
 .product-info h4 { margin: 0; font-size: 1.2em; }
 .product-info .product-price { color: var(--primary-color); font-weight: bold; margin: 5px 0; }
@@ -105,6 +109,17 @@ button.delete {
     transition: background-color 0.2s ease;
 }
 button.delete:hover { background: #c82333; }
+
+button.edit {
+    background: #ffc107;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+button.edit:hover { background: #e0a800; }
 
 button.cart-item-delete {
     background: var(--error-color);
@@ -141,6 +156,14 @@ button.cart-item-delete {
     animation: fadeInPopup 0.3s ease-out;
 }
 
+.overlay .popup h2, .overlay .cart h2 {
+    text-align: center;
+}
+
+.overlay .popup button, .overlay .cart button {
+    margin-top: 15px;
+}
+
 #cartItems li {
     padding: 8px 0;
     border-bottom: 1px solid #eee;
@@ -154,25 +177,6 @@ button.cart-item-delete {
 #totalPrice {
     font-size: 1.2em;
 }
-
-#toast {
-    visibility: hidden;
-    min-width: 250px;
-    margin-left: -125px;
-    color: #fff;
-    text-align: center;
-    border-radius: var(--border-radius);
-    padding: 10px 20px;
-    position: fixed;
-    z-index: 99;
-    bottom: 30px;
-    left: 50%;
-    transition: visibility 0s, opacity 0.5s ease-in-out;
-}
-
-#toast.show { visibility: visible; }
-#toast.success { background-color: var(--success-color); }
-#toast.error { background-color: var(--error-color); }
 
 #footer-info {
     position: fixed;
