@@ -197,17 +197,20 @@ button.cart-item-delete {
 
 #weather {
     display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-#weather img {
-    width: 24px;
-    height: 24px;
+    flex-direction: column; 
+    align-items: flex-start;
 }
 
 #weather span {
-    font-weight: normal; 
+    font-weight: bold; 
+    font-size: 1.1em;
+}
+
+#weather small {
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: #555;
+    overflow-wrap: break-word; 
 }
 
 @keyframes fadeInPopup {
